@@ -14,7 +14,7 @@ const compat = new FlatCompat({
   allConfig: js.configs.all,
 });
 
-export default [
+const config = [
   ...compat.extends(
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
@@ -29,7 +29,7 @@ export default [
         ...globals.jest,
       },
       parser: tsParser,
-      ecmaVersion: 5,
+      ecmaVersion: 2021,
       sourceType: 'module',
       parserOptions: {
         project: 'tsconfig.json',
@@ -37,6 +37,21 @@ export default [
       },
     },
     rules: {
+      // '@typescript-eslint/ban-ts-comment': ['warn', {
+      //   'ts-expect-error': 'allow-with-description',
+      //   'ts-ignore': 'allow-with-description',
+      //   'ts-nocheck': 'allow-with-description',
+      //   'ts-check': 'allow-with-description'
+      // }],
+      // '@typescript-eslint/ban-ts-comment': [
+      //   'error',
+      //   {
+      //     'ts-expect-error': 'allow-with-description',
+      //     'ts-ignore': 'allow-with-description',
+      //     'ts-nocheck': 'allow-with-description',
+      //     'ts-check': 'allow-with-description',
+      //   },
+      // ],
       '@typescript-eslint/interface-name-prefix': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -63,3 +78,5 @@ export default [
     },
   },
 ];
+
+export default config;
