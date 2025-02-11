@@ -1,2 +1,2 @@
-#npm run lint
-
+#!/usr/bin/env sh
+pnpm run lint
