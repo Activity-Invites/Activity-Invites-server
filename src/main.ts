@@ -18,7 +18,9 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   const configService = app.get(ConfigService<AllConfigType>);
 
+  // 启用应用关闭钩子
   app.enableShutdownHooks();
+  // 设置API全局前缀
   app.setGlobalPrefix(
     configService.getOrThrow('app.apiPrefix', { infer: true }),
     {
@@ -28,7 +30,9 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
+  // 配置全局验证管道
   app.useGlobalPipes(new ValidationPipe(validationOptions));
+  // 配置全局拦截器
   app.useGlobalInterceptors(
     // ResolvePromisesInterceptor is used to resolve promises in responses because class-transformer can't do it
     // https://github.com/typestack/class-transformer/issues/549
@@ -36,13 +40,14 @@ async function bootstrap() {
     new ClassSerializerInterceptor(app.get(Reflector)),
   );
 
+  // 配置Swagger
   const options = new DocumentBuilder()
     .setTitle('API')
     .setDescription('API docs')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
-
+  // 启动Swagger
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('docs', app, document);
 

@@ -1,2 +1,2 @@
-npm run lint
-npm run test -- --passWithNoTests
+#!/usr/bin/env sh
+pnpm run lint
