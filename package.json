@@ -37,7 +37,7 @@
     "test:e2e": "env-cmd jest --config ./test/jest-e2e.json",
     "test:e2e:document:docker": "docker compose -f docker-compose.document.test.yaml --env-file env-example-document -p tests up -d --build && docker compose -f docker-compose.document.test.yaml -p tests exec api /opt/wait-for-it.sh -t 0 localhost:3000 -- npm run test:e2e -- --watchAll --runInBand && docker compose -f docker-compose.document.test.yaml -p tests down && docker compose -p tests rm -svf",
     "test:e2e:relational:docker": "docker compose -f docker-compose.relational.test.yaml --env-file env-example-relational -p tests up -d --build && docker compose -f docker-compose.relational.test.yaml -p tests exec api /opt/wait-for-it.sh -t 0 localhost:3000 -- npm run test:e2e -- --watchAll --runInBand && docker compose -f docker-compose.relational.test.yaml -p tests down && docker compose -p tests rm -svf",
-    "prepare": "is-ci || husky",
+    "prepare": "husky",
     "release": "release-it"
   },
   "dependencies": {
@@ -72,6 +72,7 @@
     "passport-anonymous": "1.0.1",
     "passport-jwt": "4.0.1",
     "pg": "8.13.1",
+    "qrcode": "^1.5.4",
     "reflect-metadata": "0.2.2",
     "rimraf": "6.0.1",
     "rxjs": "7.8.1",
@@ -121,6 +122,11 @@
     "tsconfig-paths": "4.2.0",
     "tslib": "2.8.1",
     "typescript": "5.3.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pnpm run lint"
+    }
   },
   "jest": {
     "moduleFileExtensions": [

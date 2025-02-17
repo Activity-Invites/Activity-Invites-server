@@ -1,2 +1,2 @@
-#!/usr/bin/env sh
-pnpm run lint
+#!/bin/sh
+# /Users/liuxiaowen/Library/pnpm/pnpm run lint
