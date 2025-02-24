@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Activity } from '../../activities/entities/activity.entity';
+import { Activity } from '@/activities/domain/activities.entity';
 
 export enum TicketStatus {
   AVAILABLE = 'available',

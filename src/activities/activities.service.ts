@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Activity, ActivityStatus } from './entities/activity.entity';
+import { Activity, ActivityStatus } from './domain/activities.entity';
 import { CreateActivityDto } from './dto/create-activity.dto';
-import { User } from '../users/entities/user.entity';
+import { User } from '@/users/domain/user';
 import { QRCodeService } from '../utils/qrcode.service';
 
 @Injectable()

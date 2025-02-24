@@ -8,8 +8,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Activity } from '../../activities/entities/activity.entity';
-import { User } from '../../users/entities/user.entity';
+import { Activity } from '@/activities/domain/activities.entity';
+import { User } from '@/users/domain/user';
 
 @Entity()
 export class Comment {

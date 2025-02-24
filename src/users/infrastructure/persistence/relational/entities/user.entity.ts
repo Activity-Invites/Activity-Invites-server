@@ -10,12 +10,12 @@ import {
   JoinColumn,
   OneToOne,
 } from 'typeorm';
-import { RoleEntity } from '../../../../../roles/infrastructure/persistence/relational/entities/role.entity';
-import { StatusEntity } from '../../../../../statuses/infrastructure/persistence/relational/entities/status.entity';
-import { FileEntity } from '../../../../../files/infrastructure/persistence/relational/entities/file.entity';
+import { RoleEntity } from '@/roles/infrastructure/persistence/relational/entities/role.entity';
+import { StatusEntity } from '@/statuses/infrastructure/persistence/relational/entities/status.entity';
+import { FileEntity } from '@/files/infrastructure/persistence/relational/entities/file.entity';
 
-import { AuthProvidersEnum } from '../../../../../auth/auth-providers.enum';
-import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
+import { AuthProvidersEnum } from '@/auth/auth-providers.enum';
+import { EntityRelationalHelper } from '@/utils/relational-entity-helper';
 
 @Entity({
   name: 'user',

@@ -8,13 +8,13 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../../users/domain/user';
-import { Theme } from '../../themes/entities/theme.entity';
-import { Ticket } from '../../tickets/entities/ticket.entity';
-import { Comment } from '../../comments/entities/comment.entity';
+import { User } from '@/users/domain/user';
+import { Theme } from '@/themes/entities/theme.entity';
+import { Ticket } from '@/tickets/entities/ticket.entity';
+import { Comment } from '@/comments/entities/comment.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import databaseConfig from '../../database/config/database.config';
-import { DatabaseConfig } from '../../database/config/database-config.type';
+import databaseConfig from '@/database/config/database.config';
+import { DatabaseConfig } from '@/database/config/database-config.type';
 
 export enum ActivityStatus {
   DRAFT = 'draft',
