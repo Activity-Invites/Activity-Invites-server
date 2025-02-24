@@ -8,11 +8,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
-import { Theme } from '../../../../../themes/entities/theme.entity';
-import { Ticket } from '../../../../../tickets/entities/ticket.entity';
-import { Comment } from '../../../../../comments/entities/comment.entity';
-import { ActivityStatus, ActivityType } from '../../../../domain/activities.entity';
+import { UserEntity } from '@/users/infrastructure/persistence/relational/entities/user.entity';
+import { Theme } from '@/themes/entities/theme.entity';
+import { Ticket } from '@/tickets/entities/ticket.entity';
+import { Comment } from '@/comments/entities/comment.entity';
+import { ActivityStatus, ActivityType } from '@/activities/domain/activities.entity';
 
 @Entity()
 export class ActivityEntity {

@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ActivityRepository } from '../../activity.repository';
-import { Activity } from '../../../../domain/activities.entity';
+import { Activity } from '@/activities/domain/activities.entity';
 import { ActivityEntity } from '../entities/activity.entity';
 import { ActivityMapper } from '../mappers/activity.mapper';
-import { NullableType } from '../../../../../utils/types/nullable.type';
+import { NullableType } from '@/utils/types/nullable.type';
 
 @Injectable()
 export class RelationalActivityRepository implements ActivityRepository {

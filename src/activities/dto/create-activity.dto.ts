@@ -11,7 +11,7 @@ import {
   IsUUID,
   Min,
 } from 'class-validator';
-import { ActivityType } from '../entities/activity.entity';
+import { ActivityStatus, ActivityType } from '../domain/activities.entity';
 
 export class CreateActivityDto {
   @ApiProperty()

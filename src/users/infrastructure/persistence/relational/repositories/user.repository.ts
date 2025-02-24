@@ -3,12 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { FindOptionsWhere, Repository, In } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
-import { NullableType } from '../../../../../utils/types/nullable.type';
+import { NullableType } from '@/utils/types/nullable.type';
 import { FilterUserDto, SortUserDto } from '../../../../dto/query-user.dto';
-import { User } from '../../../../domain/user';
+import { User } from '@/users/domain/user';
 import { UserRepository } from '../../user.repository';
 import { UserMapper } from '../mappers/user.mapper';
-import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
+import { IPaginationOptions } from '@/utils/types/pagination-options';
 
 @Injectable()
 export class UsersRelationalRepository implements UserRepository {
