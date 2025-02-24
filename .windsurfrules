@@ -1,61 +1,67 @@
-## AI Guidelines
+# AI Guidelines
 
-You are an expert programming assistant focusing on:
+As an expert programming assistant for your Node.js NestJS project with a hexagonal architecture, supporting PostgreSQL and Mongoose, the following guidelines will be adhered to:
 
-- TypeScript, React, Node.js, AstroJS 5.x, AstroDB
-- Shadcn UI and Tailwind CSS useations
-- Latest features and best practices
-- Clear, readable, and maintainable code
-- Follows requirements carefully and precisely
-- Thinks step-by-step with detailed pseudocode
-- Writes correct, up-to-date, secure code
-- Prioritizes readability over performance
-- uses complete functionality
-- Includes all required imports
-- Maintains concise communication
-- Acknowledges uncertainty rather than guessing
+## Technical Focus
 
-### Content
+- Languages and Frameworks: Specialize in TypeScript, React, Node.js, and the specific context of your project's use of NestJS. While AstroJS 5.x and AstroDB are part of the initial scope, the primary emphasis will be on NestJS - related development.
+- UI and Styling: Apply Shadcn UI and Tailwind CSS best - practices. Ensure mobile - first design, proper use of spacing scales, and creation of reusable components.
+- Best Practices: Stay updated with the latest features and best practices in Node.js, NestJS, PostgreSQL, and Mongoose. This includes efficient database querying, code splitting, and lazy loading.
+- Code Quality: Write clear, readable, and maintainable code. Prioritize readability over performance, while still ensuring the code is correct, up - to - date, and secure.
 
-- Never remove unedited content from files
-- Avoid summarizing unchanged content as "[rest of file remains the same]"
-- Seek confirmation before any content deletion
-- Focus on updates and additions rather than deletions
+## Problem - Solving Approach
 
-### Code Formatting
-- Basic: 2 space indent, 80 char limit, template literals
-- Style: trailing commas, same-line braces, arrow functions
-- Structure: prop destructuring, TS path aliases, env vars
+- Requirement Adherence: Follow the project requirements carefully and precisely, especially those related to the hexagonal architecture and the dual support for PostgreSQL and Mongoose.
+- Step - by - Step Thinking: Break down problems into detailed pseudocode before implementing solutions. This helps in understanding the logic and ensuring all edge cases are considered.
 
-### Markdown Standards
+## Code and Communication
 
-- Line Rules
-- Single empty line at file end
-- No consecutive blanks/trailing spaces
-- Proper line spacing around elements
-- Headers
-- ATX style with space after #
-- No emoji, proper nesting, blank lines
-- Lists/Code
-- 2 space indent, proper markers
-- Language-specified fenced blocks
-- Proper link syntax [text](url)
-- Formatting
-- Tables: headers, alignment, consistent width
+- Functionality and Imports: Implement complete functionality and include all required imports in the code.
+- Concise Communication: Maintain concise communication, clearly stating the changes made and the reasoning behind them.
+- Uncertainty Acknowledgment: Acknowledge uncertainty rather than making guesses. Seek clarification when needed.
 
-### UI and Components
+## Content Handling
 
-- Tailwind
-- Mobile-first, spacing scale, reusable components
-- Color palette, responsive design, CSS variables
-- Performance
-- Code splitting, image/bundle optimization
-- Caching, lazy loading, key props
-- Database query optimization
-- Testing
-- Group by feature, descriptive names
-- Mock externals, follow conventions
-- Components
-- Clear purpose, props/types
-- Style requirements, pattern compliance
-- State management approach
+- Content Preservation: Never remove unedited content from files. Avoid summarizing unchanged content as "[rest of file remains the same]".
+- Deletion Confirmation: Seek confirmation before any content deletion. Focus on updates and additions rather than deletions.
+
+## Code Formatting
+
+Basic Format: Use 2 - space indentation, limit lines to 80 characters, and prefer template literals.
+Style: Include trailing commas, use same - line braces, and favor arrow functions.
+Structure: Employ prop destructuring, TypeScript path aliases, and environment variables effectively to keep the code organized and modular.
+
+## Markdown Standards
+
+### Line Rules
+
+Ensure a single empty line at the end of the file.
+Avoid consecutive blank lines and trailing spaces.
+Maintain proper line spacing around elements for better readability.
+
+### Headers
+
+Use ATX style headers with a space after the #.
+Avoid using emojis, ensure proper nesting, and include blank lines around headers.
+
+### Lists and Code
+Use 2 - space indentation for lists and proper markers.
+Use language - specified fenced blocks for code snippets.
+Follow proper link syntax, e.g., text.
+
+### Formatting
+For tables, include headers, ensure proper alignment, and maintain consistent column widths.
+
+## Hexagonal Architecture and Database Specifics
+
+### Hexagonal Architecture
+
+Ensure that the code follows the principles of the hexagonal architecture. Keep the core business logic independent of the database and external interfaces.
+
+### Database Support
+
+Write code that can seamlessly interact with both PostgreSQL and Mongoose. Use appropriate database drivers and abstractions to handle different data sources without tightly coupling the code. For example, create a repository layer that abstracts the database operations, allowing the application to switch between PostgreSQL and Mongoose with minimal changes.
+
+### Testing
+
+Group tests by feature and use descriptive names. Mock external dependencies and follow established testing conventions.

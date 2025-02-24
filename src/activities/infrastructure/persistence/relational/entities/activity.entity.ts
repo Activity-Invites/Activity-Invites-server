@@ -8,26 +8,14 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
-import { Theme } from '../../themes/entities/theme.entity';
-import { Ticket } from '../../tickets/entities/ticket.entity';
-import { Comment } from '../../comments/entities/comment.entity';
-
-export enum ActivityStatus {
-  DRAFT = 'draft',
-  PUBLISHED = 'published',
-  IN_PROGRESS = 'in_progress',
-  ENDED = 'ended',
-  CANCELLED = 'cancelled',
-}
-
-export enum ActivityType {
-  FREE = 'free',
-  PAID = 'paid',
-}
+import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
+import { Theme } from '../../../../../themes/entities/theme.entity';
+import { Ticket } from '../../../../../tickets/entities/ticket.entity';
+import { Comment } from '../../../../../comments/entities/comment.entity';
+import { ActivityStatus, ActivityType } from '../../../../domain/activities.entity';
 
 @Entity()
-export class Activity {
+export class ActivityEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -81,9 +69,9 @@ export class Activity {
   @Column({ type: 'int', default: 0 })
   currentParticipants: number;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => UserEntity)
   @JoinColumn()
-  creator: User;
+  creator: UserEntity;
 
   @ManyToOne(() => Theme)
   @JoinColumn()
