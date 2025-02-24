@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ActivityRepository } from '../../activity.repository';
-import { Activity } from '@/activities/domain/activities.entity';
+import { Activity } from '@/activities/domain/activities';
 import { ActivityEntity } from '../entities/activity.entity';
 import { ActivityMapper } from '../mappers/activity.mapper';
 import { NullableType } from '@/utils/types/nullable.type';

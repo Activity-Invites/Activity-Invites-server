@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Activity } from '@/activities/domain/activities.entity';
+import { Activity } from '@/activities/domain/activities';
 
 @Entity()
 export class Theme {

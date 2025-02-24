@@ -1,4 +1,4 @@
-import { Activity } from '@/activities/domain/activities.entity';
+import { Activity } from '@/activities/domain/activities';
 import { ActivityEntity } from '../entities/activity.entity';
 
 export class ActivityMapper {

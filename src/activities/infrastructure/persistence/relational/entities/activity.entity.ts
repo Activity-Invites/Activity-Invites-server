@@ -9,10 +9,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from '@/users/infrastructure/persistence/relational/entities/user.entity';
-import { Theme } from '@/themes/entities/theme.entity';
-import { Ticket } from '@/tickets/entities/ticket.entity';
-import { Comment } from '@/comments/entities/comment.entity';
-import { ActivityStatus, ActivityType } from '@/activities/domain/activities.entity';
+import { Theme } from '@/themes/domain/theme';
+import { Ticket } from '@/tickets/domain/ticket';
+import { Comment } from '@/comments/domain/comment';
+import { ActivityStatus, ActivityType } from '@/activities/domain/activities';
 
 @Entity()
 export class ActivityEntity {

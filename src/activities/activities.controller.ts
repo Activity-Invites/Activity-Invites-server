@@ -11,7 +11,7 @@ import {
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ActivitiesService } from './activities.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
-import { Activity, ActivityStatus } from './domain/activities.entity';
+import { Activity, ActivityStatus } from './domain/activities';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/roles/roles.guard';
 import { Roles } from '@/roles/roles.decorator';

@@ -1,5 +1,5 @@
 import { NullableType } from '@/utils/types/nullable.type';
-import { Activity } from '@/activities/domain/activities.entity';
+import { Activity } from '@/activities/domain/activities';
 
 export interface ActivityRepository {
   create(activity: Activity): Promise<Activity>;

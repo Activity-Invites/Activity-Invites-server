@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Activity } from '@/activities/domain/activities.entity';
+import { Activity } from '../../activities/domain/activities';
 
 export enum TicketStatus {
   AVAILABLE = 'available',
@@ -29,12 +29,6 @@ export class Ticket {
 
   @Column('text')
   description: string;
-
-  @Column({ type: 'int' })
-  quantity: number;
-
-  @Column({ type: 'int', default: 0 })
-  soldCount: number;
 
   @Column({
     type: 'enum',

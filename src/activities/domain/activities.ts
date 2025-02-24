@@ -9,9 +9,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '@/users/domain/user';
-import { Theme } from '@/themes/entities/theme.entity';
-import { Ticket } from '@/tickets/entities/ticket.entity';
-import { Comment } from '@/comments/entities/comment.entity';
+import { Theme } from '@/themes/domain/theme';
+import { Ticket } from '@/tickets/domain/ticket';
+import { Comment } from '@/comments/domain/comment';
 import { ApiProperty } from '@nestjs/swagger';
 import databaseConfig from '@/database/config/database.config';
 import { DatabaseConfig } from '@/database/config/database-config.type';
