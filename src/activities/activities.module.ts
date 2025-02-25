@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ActivitiesService } from './activities.service';
 import { ActivitiesController } from './activities.controller';
-import { Activity } from './domain/activities';
+import { Activity } from './domain/activity';
 import { QRCodeService } from '../utils/qrcode.service';
 
 @Module({

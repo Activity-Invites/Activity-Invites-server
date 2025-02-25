@@ -1,6 +1,7 @@
 import { DeepPartial } from '../../../utils/types/deep-partial.type';
 import { NullableType } from '../../../utils/types/nullable.type';
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
+import { IPaginationResponse } from '../../../utils/types/pagination-response';
 import { Ticket } from '../../domain/ticket';
 import { FilterTicketDto, SortTicketDto } from '../../dto/query-ticket.dto';
 
@@ -17,7 +18,7 @@ export abstract class TicketRepository {
     filterOptions?: FilterTicketDto | null;
     sortOptions?: SortTicketDto[] | null;
     paginationOptions: IPaginationOptions;
-  }): Promise<Ticket[]>;
+  }): Promise<IPaginationResponse<Ticket>>;
 
   abstract findById(id: Ticket['id']): Promise<NullableType<Ticket>>;
   abstract findByIds(ids: Ticket['id'][]): Promise<Ticket[]>;
