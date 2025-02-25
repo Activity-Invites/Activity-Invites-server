@@ -11,13 +11,14 @@ import {
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ActivitiesService } from './activities.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
-import { Activity, ActivityStatus } from './domain/activities.entity';
+import { Activity, ActivityStatus } from './domain/activity';
 import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/roles/roles.guard';
 import { Roles } from '@/roles/roles.decorator';
 import { RoleEnum } from '@/roles/roles.enum';
 import { CurrentUser } from '@/auth/decorators/current-user.decorator';
 import { User } from '@/users/domain/user';
+
 
 @ApiTags('activities')
 @Controller('activities')
@@ -80,8 +81,16 @@ export class ActivitiesController {
   @Roles(RoleEnum.Admin, RoleEnum.User)
   @ApiOperation({ summary: 'Join activity' })
   @ApiResponse({ status: 200, type: Activity })
-  join(@Param('id') id: string, @CurrentUser() user: User): Promise<Activity> {
+  join(@Param('id') id: string, @CurrentUser() user: User): Promise<void> {
     return this.activitiesService.join(id, user);
+  }
+
+  @Patch(':id/leave')
+  @Roles(RoleEnum.Admin, RoleEnum.User)
+  @ApiOperation({ summary: 'Leave activity' })
+  @ApiResponse({ status: 200, type: Activity })
+  leave(@Param('id') id: string, @CurrentUser() user: User): Promise<void> {
+    return this.activitiesService.leave(id, user);
   }
 
   @Patch(':id/cancel')
@@ -91,7 +100,7 @@ export class ActivitiesController {
   cancel(
     @Param('id') id: string,
     @CurrentUser() user: User,
-  ): Promise<Activity> {
+  ): Promise<void> {
     return this.activitiesService.cancel(id, user);
   }
 }
