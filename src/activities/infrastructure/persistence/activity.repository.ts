@@ -2,6 +2,8 @@ import { NullableType } from '@/utils/types/nullable.type';
 import { Activity, ActivityStatus, ActivityType } from '@/activities/domain/activity';
 import { FilterActivityDto, SortActivityDto } from '@/activities/dto/query-activity.dto';
 import { IPaginationOptions } from '@/utils/types/pagination-options';
+import { User } from '@/users/domain/user';
+
 
 export abstract class ActivityRepository {
   /**
@@ -50,6 +52,12 @@ export abstract class ActivityRepository {
    * @param id 活动ID
    */
   abstract recover(id: string): Promise<void>;
+
+  abstract findAll(options: {
+    isPublic?: boolean;
+    status?: ActivityStatus;
+    creatorId?: string;
+  }): Promise<Activity[]>;
 
   /**
    * 根据创建者ID查找活动
@@ -114,4 +122,18 @@ export abstract class ActivityRepository {
    * @param id 活动ID
    */
   abstract hardDelete(id: string): Promise<void>;
+
+  /**
+   * 加入活动
+   * @param id 活动ID
+   * @param user 当前用户
+   */
+  abstract join(id: string, user: User): Promise<void>;
+
+  /**
+   * 退出活动
+   * @param id 活动ID
+   * @param user 当前用户
+   */
+  abstract leave(id: string, user: User): Promise<void>;
 }

@@ -8,6 +8,7 @@ import { ActivityDocumentMapper } from '../mappers/activity.mapper';
 import { ActivityRepository } from '../../activity.repository';
 import { FilterActivityDto, SortActivityDto } from '@/activities/dto/query-activity.dto';
 import { IPaginationOptions } from '@/utils/types/pagination-options';
+import { User } from '@/users/domain/user';
 
 @Injectable()
 export class DocumentActivityRepository implements ActivityRepository {
@@ -107,12 +108,6 @@ export class DocumentActivityRepository implements ActivityRepository {
     return ActivityDocumentMapper.toDomain(updatedActivity);
   }
 
-  async softDelete(id: string): Promise<void> {
-    await this.activityModel.findByIdAndUpdate(id, {
-      deletedAt: new Date(),
-    });
-  }
-
   async softRemove(entity: Activity): Promise<void> {
     await this.activityModel.findByIdAndUpdate(entity.id, {
       deletedAt: new Date(),
@@ -197,7 +192,56 @@ export class DocumentActivityRepository implements ActivityRepository {
     });
   }
 
+  async softDelete(id: string): Promise<void> {
+    await this.activityModel.findByIdAndUpdate(id, {
+      deletedAt: new Date(),
+    });
+  }
+
   async hardDelete(id: string): Promise<void> {
     await this.activityModel.findByIdAndDelete(id);
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.activityModel.findByIdAndUpdate(id, {
+      deletedAt: new Date(),
+    });
+  }
+
+  async join(id: string, user: User): Promise<void> {
+    await this.activityModel.findByIdAndUpdate(id, {
+      $addToSet: { participants: user.id },
+    });
+  }
+
+  async leave(id: string, user: User): Promise<void> {
+    await this.activityModel.findByIdAndUpdate(id, {
+      $pull: { participants: user.id },
+    });
+  }
+
+  async findAll(options: {
+    isPublic?: boolean;
+    status?: ActivityStatus;
+    creatorId?: string;
+  }): Promise<Activity[]> {
+    const query: any = {};
+
+    if (options.isPublic !== undefined) {
+      query.isPublic = options.isPublic;
+    }
+    if (options.status) {
+      query.status = options.status;
+    }
+    if (options.creatorId) {
+      query['creator'] = options.creatorId;
+    }
+
+    const activities = await this.activityModel
+      .find(query)
+      .populate(['creator', 'theme', 'tickets', 'comments'])
+      .exec();
+
+    return activities.map(activity => ActivityDocumentMapper.toDomain(activity));
   }
 }

@@ -173,7 +173,7 @@ export class ActivitiesService {
    * @param id 活动ID
    * @param user 当前用户
    */
-  async cancel(id: string, user: User): Promise<Activity> {
+  async cancel(id: string, user: User): Promise<void> {
     const activity = await this.activityRepository.findOne(id);
     if (!activity) {
       throw new NotFoundException('活动不存在');
@@ -187,7 +187,7 @@ export class ActivitiesService {
       throw new BadRequestException('只有已发布的活动可以取消');
     }
 
-    return this.activityRepository.update(id, {
+    this.activityRepository.update(id, {
       status: ActivityStatus.CANCELLED,
     });
   }
@@ -214,6 +214,31 @@ export class ActivitiesService {
     return this.activityRepository.update(id, {
       status: ActivityStatus.ENDED,
     });
+  }
+
+
+  /**
+   * 查找全部活动
+   * @param filters 过滤条件
+   */
+  async findAll(filters: {
+    isPublic?: boolean;
+    status?: ActivityStatus;
+    creatorId?: string;
+  }): Promise<Activity[]> {
+    return this.activityRepository.findAll(filters);
+  }
+
+  /**
+   * 根据活动ID获取详情
+   * @param id 活动ID
+   */
+  async findOne(id: string): Promise<Activity> {
+    const activity = await this.activityRepository.findOne(id);
+    if (!activity) {
+      throw new NotFoundException('活动不存在');
+    }
+    return activity;
   }
 
   /**
@@ -284,5 +309,64 @@ export class ActivitiesService {
    */
   async findDeletedActivities(): Promise<Activity[]> {
     return this.activityRepository.findDeletedActivities();
+  }
+
+
+  /**
+   * 根据活动ID和用户ID生成邀请码
+   * @param id 活动ID
+   * @param user 当前用户
+   */
+  async generateInviteQRCode(id: string, user: User): Promise<string> {
+    const activity = await this.activityRepository.findOne(id);
+    if (!activity) {
+      throw new NotFoundException('活动不存在');
+    }
+
+    if (activity.creator.id !== user.id) {
+      throw new ForbiddenException('无权限生成邀请码');
+    }
+
+    return '邀请码';
+  }
+
+  /**
+   * 加入活动
+   * @param id 活动ID
+   * @param user 当前用户
+  */
+  async join(id: string, user: User): Promise<void> {
+    const activity = await this.activityRepository.findOne(id);
+    if (!activity) {
+      throw new NotFoundException('活动不存在');
+    }
+
+    if (activity.status === ActivityStatus.CANCELLED) {
+      throw new ForbiddenException('活动已取消');
+    }
+
+    if (activity.status === ActivityStatus.ENDED) {
+      throw new ForbiddenException('活动已结束');
+    }
+
+    return this.activityRepository.join(id, user);
+  } 
+
+  /**
+   * 退出活动
+   * @param id 活动ID
+   * @param user 当前用户
+   */
+  async leave(id: string, user: User): Promise<void> {
+    const activity = await this.activityRepository.findOne(id);
+    if (!activity) {
+      throw new NotFoundException('活动不存在');
+    }
+
+    if (activity.status === ActivityStatus.CANCELLED) {
+      throw new ForbiddenException('活动已取消');
+    }
+
+    return this.activityRepository.leave(id, user);
   }
 }

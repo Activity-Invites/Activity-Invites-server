@@ -149,6 +149,12 @@ export class Activity {
   comments: Comment[];
 
   @ApiProperty({
+    description: '活动参与者',
+    type: () => [User],
+  })
+  participants: User[];
+
+  @ApiProperty({
     description: '创建时间',
     type: Date,
   })

@@ -1,5 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsIn, IsArray } from 'class-validator';
+import { IsOptional, IsString, IsIn, IsArray, IsEnum } from 'class-validator';
+
+export enum ThemeStatus {
+  LIGHT = 'light',
+  DARK = 'dark',
+}
 
 export class FilterThemeDto {
   @ApiProperty({
@@ -49,4 +54,5 @@ export class SortThemeDto {
   @IsString()
   @IsIn(['ASC', 'DESC'])
   order?: 'ASC' | 'DESC' = 'DESC';
+
 }

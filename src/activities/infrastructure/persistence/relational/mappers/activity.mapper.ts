@@ -45,6 +45,12 @@ export class ActivityMapper {
       );
     }
     
+    if (entity.participants) {
+      domainEntity.participants = entity.participants.map((participant) =>
+        UserMapper.toDomain(participant),
+      );
+    }
+    
     domainEntity.createdAt = entity.createdAt;
     domainEntity.updatedAt = entity.updatedAt;
     domainEntity.deletedAt = entity.deletedAt;
@@ -91,6 +97,12 @@ export class ActivityMapper {
     if (domain.comments) {
       entity.comments = domain.comments.map(comment => 
         CommentMapper.toPersistence(comment)
+      );
+    }
+    
+    if (domain.participants) {
+      entity.participants = domain.participants.map((participant) =>
+        UserMapper.toPersistence(participant),
       );
     }
     

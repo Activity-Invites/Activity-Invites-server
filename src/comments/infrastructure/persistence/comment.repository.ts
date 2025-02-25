@@ -1,6 +1,7 @@
 import { DeepPartial } from '../../../utils/types/deep-partial.type';
 import { NullableType } from '../../../utils/types/nullable.type';
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
+import { IPaginationResponse } from '../../../utils/types/pagination-response';
 import { Comment } from '../../domain/comment';
 import { FilterCommentDto, SortCommentDto } from '../../dto/query-comment.dto';
 
@@ -17,7 +18,7 @@ export abstract class CommentRepository {
     filterOptions?: FilterCommentDto | null;
     sortOptions?: SortCommentDto[] | null;
     paginationOptions: IPaginationOptions;
-  }): Promise<Comment[]>;
+  }): Promise<IPaginationResponse<Comment>>;
 
   abstract findById(id: Comment['id']): Promise<NullableType<Comment>>;
   abstract findByIds(ids: Comment['id'][]): Promise<Comment[]>;

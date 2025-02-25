@@ -1,34 +1,58 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Activity } from '@/activities/domain/activity';
 
 @Schema({
+  collection: 'themes',
   timestamps: true,
-  toJSON: {
-    virtuals: true,
-    getters: true,
-  },
 })
-export class ThemeSchemaClass {
+export class ThemeSchemaClass extends Document {
+
   @Prop({ type: String, required: true })
   _id: string;
 
-  @Prop({ required: true })
+
+  @Prop({
+    type: String,
+    required: true,
+    maxlength: 100,
+  })
   name: string;
 
-  @Prop({ required: true })
+  @Prop({
+    type: String,
+    required: true,
+  })
   description: string;
 
-  @Prop({ required: true })
+  @Prop({
+    type: String,
+    required: true,
+    maxlength: 50,
+  })
   category: string;
 
-  @Prop({ type: [String], default: [] })
+  @Prop({
+    type: [String],
+    default: [],
+  })
   tags: string[];
 
-  @Prop({ type: String, required: false })
+  @Prop({
+    type: String,
+  })
   coverImage?: string;
 
-  @Prop({ default: false })
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
   isDeleted: boolean;
+
+  @Prop({
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Activity' }],
+  })
+  activities: Activity[];
 
   @Prop()
   createdAt: Date;
@@ -40,5 +64,4 @@ export class ThemeSchemaClass {
   deletedAt?: Date;
 }
 
-export type ThemeDocument = ThemeSchemaClass & Document;
 export const ThemeSchema = SchemaFactory.createForClass(ThemeSchemaClass);

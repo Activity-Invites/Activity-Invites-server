@@ -39,7 +39,7 @@ export class TicketsController {
     // Inject user information into the DTO
     return this.ticketsService.create({
       ...createTicketDto,
-      userId: user.id,
+      userId: String(user.id),
     });
   }
 

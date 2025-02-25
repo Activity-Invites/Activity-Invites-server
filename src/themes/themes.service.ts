@@ -11,7 +11,11 @@ export class ThemesService {
   constructor(private readonly themeRepository: ThemeRepository) {}
 
   async create(createThemeDto: CreateThemeDto): Promise<Theme> {
-    return this.themeRepository.create(createThemeDto);
+    return this.themeRepository.create({
+      ...createThemeDto,
+      tags: createThemeDto.tags || [],
+      isDeleted: createThemeDto.isDeleted ?? false,
+    });
   }
 
   async findAll(options: {

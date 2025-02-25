@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsOptional, IsArray, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsArray, IsUrl, IsBoolean } from 'class-validator';
 
 export class CreateThemeDto {
   @ApiProperty({
@@ -44,4 +44,12 @@ export class CreateThemeDto {
   @IsOptional()
   @IsUrl()
   coverImage?: string;
+
+  @ApiProperty({
+    description: '是否已删除',
+    example: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isDeleted?: boolean;
 }

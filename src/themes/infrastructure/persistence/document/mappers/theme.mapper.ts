@@ -1,9 +1,9 @@
 import { Theme } from '@/themes/domain/theme';
-import { ThemeDocument } from '../entities/theme.schema';
+import { ThemeSchemaClass } from '../entities/theme.schema';
 import { Types } from 'mongoose';
 
 export class ThemeDocumentMapper {
-  static toDomain(document: ThemeDocument): Theme {
+  static toDomain(document: ThemeSchemaClass): Theme {
     const domain = new Theme();
     domain.id = document._id.toString();
     domain.name = document.name;
@@ -18,7 +18,7 @@ export class ThemeDocumentMapper {
     return domain;
   }
 
-  static toDocument(domain: Theme): Partial<ThemeDocument> {
+  static toDocument(domain: Theme): Partial<ThemeSchemaClass> {
     const document: any = {
       name: domain.name,
       description: domain.description,

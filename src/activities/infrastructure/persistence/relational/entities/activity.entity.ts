@@ -4,6 +4,8 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -85,6 +87,20 @@ export class ActivityEntity {
 
   @OneToMany(() => CommentEntity, (comment) => comment.activity)
   comments: CommentEntity[];
+
+  @ManyToMany(() => UserEntity)
+  @JoinTable({
+    name: 'activity_participants',
+    joinColumn: {
+      name: 'activity_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+  })
+  participants: UserEntity[];
 
   @CreateDateColumn({ comment: '创建时间' })
   createdAt: Date;

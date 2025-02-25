@@ -1,5 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsUUID, IsString, IsIn } from 'class-validator';
+import { IsOptional, IsUUID, IsString, IsIn, IsEnum, IsNotEmpty } from 'class-validator';
+
+export enum CommentSortField {
+  ID = 'id',
+  CONTENT = 'content',
+  CREATED_AT = 'createdAt',
+  UPDATED_AT = 'updatedAt',
+}
+
+export enum SortOrder {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
 
 export class FilterCommentDto {
   @ApiProperty({
@@ -30,21 +42,19 @@ export class FilterCommentDto {
 export class SortCommentDto {
   @ApiProperty({
     description: '排序字段',
-    enum: ['createdAt', 'updatedAt'],
-    required: false,
+    enum: CommentSortField,
+    example: CommentSortField.CREATED_AT,
   })
-  @IsOptional()
-  @IsString()
-  @IsIn(['createdAt', 'updatedAt'])
-  orderBy?: string;
+  @IsNotEmpty()
+  @IsEnum(CommentSortField)
+  field: CommentSortField;
 
   @ApiProperty({
     description: '排序方向',
-    enum: ['ASC', 'DESC'],
-    required: false,
+    enum: SortOrder,
+    example: SortOrder.DESC,
   })
-  @IsOptional()
-  @IsString()
-  @IsIn(['ASC', 'DESC'])
-  order?: 'ASC' | 'DESC' = 'DESC';
+  @IsNotEmpty()
+  @IsEnum(SortOrder)
+  order: SortOrder = SortOrder.DESC;
 }

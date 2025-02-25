@@ -38,8 +38,37 @@ export class CommentMapper {
     entity.id = domain.id;
     entity.content = domain.content;
     entity.isDeleted = domain.isDeleted;
-    entity.createdAt = domain.createdAt;
-    entity.updatedAt = domain.updatedAt;
+    
+    if (domain.activity) {
+      entity.activity = ActivityMapper.toPersistence(domain.activity);
+    }
+    
+    if (domain.user) {
+      entity.user = UserMapper.toPersistence(domain.user);
+    }
+    
+    if (domain.parent) {
+      entity.parent = CommentMapper.toPersistence(domain.parent);
+    }
+    
+    if (domain.replies) {
+      entity.replies = domain.replies.map(reply => 
+        CommentMapper.toPersistence(reply)
+      );
+    }
+    
+    if (domain.createdAt) {
+      entity.createdAt = domain.createdAt;
+    }
+    
+    if (domain.updatedAt) {
+      entity.updatedAt = domain.updatedAt;
+    }
+    
+    if (domain.deletedAt) {
+      entity.deletedAt = domain.deletedAt;
+    }
+    
     return entity;
   }
 }

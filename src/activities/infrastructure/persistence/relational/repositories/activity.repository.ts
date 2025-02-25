@@ -8,6 +8,7 @@ import { ActivityMapper } from '../mappers/activity.mapper';
 import { ActivityRepository } from '../../activity.repository';
 import { FilterActivityDto, SortActivityDto } from '@/activities/dto/query-activity.dto';
 import { IPaginationOptions } from '@/utils/types/pagination-options';
+import { User } from '@/users/domain/user';
 
 @Injectable()
 export class RelationalActivityRepository implements ActivityRepository {
@@ -255,5 +256,56 @@ export class RelationalActivityRepository implements ActivityRepository {
 
   async hardDelete(id: string): Promise<void> {
     await this.activityRepository.delete(id);
+  }
+
+  async findAll(options: {
+    isPublic?: boolean;
+    status?: ActivityStatus;
+    creatorId?: string;
+  }): Promise<Activity[]> {
+    const queryBuilder = this.activityRepository.createQueryBuilder('activity');
+
+    // 添加关联
+    queryBuilder
+      .leftJoinAndSelect('activity.creator', 'creator')
+      .leftJoinAndSelect('activity.theme', 'theme')
+      .leftJoinAndSelect('activity.tickets', 'tickets')
+      .leftJoinAndSelect('activity.comments', 'comments');
+
+    // 应用过滤条件
+    if (options.isPublic !== undefined) {
+      queryBuilder.andWhere('activity.isPublic = :isPublic', {
+        isPublic: options.isPublic,
+      });
+    }
+    if (options.status) {
+      queryBuilder.andWhere('activity.status = :status', {
+        status: options.status,
+      });
+    }
+    if (options.creatorId) {
+      queryBuilder.andWhere('creator.id = :creatorId', {
+        creatorId: options.creatorId,
+      });
+    }
+
+    const entities = await queryBuilder.getMany();
+    return entities.map((entity) => ActivityMapper.toDomain(entity));
+  }
+
+  async join(id: string, user: User): Promise<void> {
+    await this.activityRepository
+      .createQueryBuilder('activity')
+      .relation('participants')
+      .of(id)
+      .add(user.id);
+  }
+
+  async leave(id: string, user: User): Promise<void> {
+    await this.activityRepository
+      .createQueryBuilder('activity')
+      .relation('participants')
+      .of(id)
+      .remove(user.id);
   }
 }
