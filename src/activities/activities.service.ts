@@ -4,33 +4,37 @@ import {
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Activity, ActivityStatus } from './domain/activities';
+import { Activity, ActivityStatus, ActivityType } from './domain/activity';
 import { CreateActivityDto } from './dto/create-activity.dto';
+import { UpdateActivityDto } from './dto/update-activity.dto';
 import { User } from '@/users/domain/user';
-import { QRCodeService } from '../utils/qrcode.service';
+import { QRCodeService } from '@/utils/qrcode.service';
 import { CustomLoggerService } from '@/shared/logger/logger.service';
+import { ActivityRepository } from './infrastructure/persistence/activity.repository';
 
 @Injectable()
 export class ActivitiesService {
   constructor(
-    @InjectRepository(Activity)
-    private readonly activitiesRepository: Repository<Activity>,
+    private readonly activityRepository: ActivityRepository,
     private readonly qrCodeService: QRCodeService,
     private readonly logger: CustomLoggerService,
   ) {}
 
+  /**
+   * 创建活动
+   * @param createActivityDto 创建活动DTO
+   * @param creator 创建者
+   */
   async create(
     createActivityDto: CreateActivityDto,
     creator: User,
   ): Promise<Activity> {
     try {
-      const activity = this.activitiesRepository.create({
+      const activity = {
         ...createActivityDto,
         creator,
         status: ActivityStatus.DRAFT,
-      });
+      } as Activity;
 
       // 生成二维码
       try {
@@ -47,7 +51,7 @@ export class ActivitiesService {
         // 继续执行，因为二维码不是必需的
       }
 
-      const savedActivity = await this.activitiesRepository.save(activity);
+      const savedActivity = await this.activityRepository.create(activity);
       this.logger.log(
         `活动创建成功: ${savedActivity.id}`,
         'ActivitiesService.create',
@@ -59,165 +63,226 @@ export class ActivitiesService {
         error.stack,
         'ActivitiesService.create',
       );
-      throw error; // 重新抛出错误，让全局异常过滤器处理
+      throw error;
     }
   }
 
-  async findAll(options: {
-    isPublic?: boolean;
-    status?: ActivityStatus;
-    creatorId?: string;
-  }): Promise<Activity[]> {
-    try {
-      return this.activitiesRepository.find({
-        where: options,
-        relations: ['creator', 'theme'],
-      });
-    } catch (error) {
-      this.logger.error(
-        '获取活动列表失败',
-        error.stack,
-        'ActivitiesService.findAll',
-      );
-      throw error; // 重新抛出错误，让全局异常过滤器处理
+  /**
+   * 更新活动
+   * @param id 活动ID
+   * @param updateActivityDto 更新活动DTO
+   * @param user 当前用户
+   */
+  async update(
+    id: string,
+    updateActivityDto: UpdateActivityDto,
+    user: User,
+  ): Promise<Activity> {
+    const activity = await this.activityRepository.findOne(id);
+    if (!activity) {
+      throw new NotFoundException('活动不存在');
     }
+
+    if (activity.creator.id !== user.id) {
+      throw new ForbiddenException('无权限修改此活动');
+    }
+
+    return this.activityRepository.update(id, updateActivityDto);
   }
 
-  async findOne(id: string): Promise<Activity> {
-    try {
-      const activity = await this.activitiesRepository.findOne({
-        where: { id },
-        relations: ['creator', 'theme', 'tickets', 'comments'],
-      });
-
-      if (!activity) {
-        throw new NotFoundException('Activity not found');
-      }
-
-      return activity;
-    } catch (error) {
-      this.logger.error(
-        '获取活动详情失败',
-        error.stack,
-        'ActivitiesService.findOne',
-      );
-      throw error; // 重新抛出错误，让全局异常过滤器处理
+  /**
+   * 删除活动
+   * @param id 活动ID
+   * @param user 当前用户
+   */
+  async delete(id: string, user: User): Promise<void> {
+    const activity = await this.activityRepository.findOne(id);
+    if (!activity) {
+      throw new NotFoundException('活动不存在');
     }
+
+    if (activity.creator.id !== user.id) {
+      throw new ForbiddenException('无权限删除此活动');
+    }
+
+    await this.activityRepository.softDelete(id);
   }
 
+  /**
+   * 恢复已删除的活动
+   * @param id 活动ID
+   * @param user 当前用户
+   */
+  async restore(id: string, user: User): Promise<void> {
+    const activity = await this.activityRepository.findOne(id);
+    if (!activity) {
+      throw new NotFoundException('活动不存在');
+    }
+
+    if (activity.creator.id !== user.id) {
+      throw new ForbiddenException('无权限恢复此活动');
+    }
+
+    await this.activityRepository.restore(id);
+  }
+
+  /**
+   * 永久删除活动
+   * @param id 活动ID
+   * @param user 当前用户
+   */
+  async hardDelete(id: string, user: User): Promise<void> {
+    const activity = await this.activityRepository.findOne(id);
+    if (!activity) {
+      throw new NotFoundException('活动不存在');
+    }
+
+    if (activity.creator.id !== user.id) {
+      throw new ForbiddenException('无权限永久删除此活动');
+    }
+
+    await this.activityRepository.hardDelete(id);
+  }
+
+  /**
+   * 发布活动
+   * @param id 活动ID
+   * @param user 当前用户
+   */
   async publish(id: string, user: User): Promise<Activity> {
-    try {
-      const activity = await this.findOne(id);
-
-      if (activity.creator.id !== user.id) {
-        throw new ForbiddenException('Only creator can publish activity');
-      }
-
-      if (activity.status !== ActivityStatus.DRAFT) {
-        throw new BadRequestException('Only draft activities can be published');
-      }
-
-      activity.status = ActivityStatus.PUBLISHED;
-      const savedActivity = await this.activitiesRepository.save(activity);
-      this.logger.log(
-        `活动发布成功: ${savedActivity.id}`,
-        'ActivitiesService.publish',
-      );
-      return savedActivity;
-    } catch (error) {
-      this.logger.error(
-        '发布活动失败',
-        error.stack,
-        'ActivitiesService.publish',
-      );
-      throw error; // 重新抛出错误，让全局异常过滤器处理
+    const activity = await this.activityRepository.findOne(id);
+    if (!activity) {
+      throw new NotFoundException('活动不存在');
     }
+
+    if (activity.creator.id !== user.id) {
+      throw new ForbiddenException('无权限发布此活动');
+    }
+
+    if (activity.status !== ActivityStatus.DRAFT) {
+      throw new BadRequestException('只有草稿状态的活动可以发布');
+    }
+
+    return this.activityRepository.update(id, {
+      status: ActivityStatus.PUBLISHED,
+    });
   }
 
-  async generateInviteQRCode(id: string, user: User): Promise<string> {
-    try {
-      const activity = await this.findOne(id);
-
-      if (activity.creator.id !== user.id) {
-        throw new ForbiddenException('Only creator can generate invite QR code');
-      }
-
-      // Generate a unique invite token
-      const inviteToken = `${activity.id}-${Date.now()}`;
-
-      // Generate QR code with the invite URL
-      const qrCodeData = await this.qrCodeService.generate(
-        `${process.env.APP_URL}/activities/join/${inviteToken}`,
-      );
-
-      return qrCodeData;
-    } catch (error) {
-      this.logger.error(
-        '生成邀请二维码失败',
-        error.stack,
-        'ActivitiesService.generateInviteQRCode',
-      );
-      throw error; // 重新抛出错误，让全局异常过滤器处理
-    }
-  }
-
-  async join(id: string, user: User): Promise<Activity> {
-    try {
-      const activity = await this.findOne(id);
-
-      if (activity.status !== ActivityStatus.PUBLISHED) {
-        throw new BadRequestException('Activity is not open for registration');
-      }
-
-      if (activity.currentParticipants >= activity.maxParticipants) {
-        throw new BadRequestException('Activity is full');
-      }
-
-      // TODO: Add participant to activity
-      activity.currentParticipants += 1;
-
-      const savedActivity = await this.activitiesRepository.save(activity);
-      this.logger.log(
-        `用户加入活动成功: ${savedActivity.id}`,
-        'ActivitiesService.join',
-      );
-      return savedActivity;
-    } catch (error) {
-      this.logger.error(
-        '加入活动失败',
-        error.stack,
-        'ActivitiesService.join',
-      );
-      throw error; // 重新抛出错误，让全局异常过滤器处理
-    }
-  }
-
+  /**
+   * 取消活动
+   * @param id 活动ID
+   * @param user 当前用户
+   */
   async cancel(id: string, user: User): Promise<Activity> {
-    try {
-      const activity = await this.findOne(id);
-
-      if (activity.creator.id !== user.id) {
-        throw new ForbiddenException('Only creator can cancel activity');
-      }
-
-      if (activity.status === ActivityStatus.ENDED) {
-        throw new BadRequestException('Cannot cancel ended activity');
-      }
-
-      activity.status = ActivityStatus.CANCELLED;
-      const savedActivity = await this.activitiesRepository.save(activity);
-      this.logger.log(
-        `活动取消成功: ${savedActivity.id}`,
-        'ActivitiesService.cancel',
-      );
-      return savedActivity;
-    } catch (error) {
-      this.logger.error(
-        '取消活动失败',
-        error.stack,
-        'ActivitiesService.cancel',
-      );
-      throw error; // 重新抛出错误，让全局异常过滤器处理
+    const activity = await this.activityRepository.findOne(id);
+    if (!activity) {
+      throw new NotFoundException('活动不存在');
     }
+
+    if (activity.creator.id !== user.id) {
+      throw new ForbiddenException('无权限取消此活动');
+    }
+
+    if (activity.status !== ActivityStatus.PUBLISHED) {
+      throw new BadRequestException('只有已发布的活动可以取消');
+    }
+
+    return this.activityRepository.update(id, {
+      status: ActivityStatus.CANCELLED,
+    });
+  }
+
+  /**
+   * 结束活动
+   * @param id 活动ID
+   * @param user 当前用户
+   */
+  async end(id: string, user: User): Promise<Activity> {
+    const activity = await this.activityRepository.findOne(id);
+    if (!activity) {
+      throw new NotFoundException('活动不存在');
+    }
+
+    if (activity.creator.id !== user.id) {
+      throw new ForbiddenException('无权限结束此活动');
+    }
+
+    if (activity.status !== ActivityStatus.IN_PROGRESS) {
+      throw new BadRequestException('只有进行中的活动可以结束');
+    }
+
+    return this.activityRepository.update(id, {
+      status: ActivityStatus.ENDED,
+    });
+  }
+
+  /**
+   * 查找用户创建的活动
+   * @param userId 用户ID
+   */
+  async findByCreator(userId: string): Promise<Activity[]> {
+    return this.activityRepository.findByCreatorId(userId);
+  }
+
+  /**
+   * 查找主题相关的活动
+   * @param themeId 主题ID
+   */
+  async findByTheme(themeId: string): Promise<Activity[]> {
+    return this.activityRepository.findByThemeId(themeId);
+  }
+
+  /**
+   * 查找指定状态的活动
+   * @param status 活动状态
+   */
+  async findByStatus(status: ActivityStatus): Promise<Activity[]> {
+    return this.activityRepository.findByStatus(status);
+  }
+
+  /**
+   * 查找指定类型的活动
+   * @param type 活动类型
+   */
+  async findByType(type: ActivityType): Promise<Activity[]> {
+    return this.activityRepository.findByType(type);
+  }
+
+  /**
+   * 查找时间范围内的活动
+   * @param startTime 开始时间
+   * @param endTime 结束时间
+   */
+  async findByTimeRange(startTime: Date, endTime: Date): Promise<Activity[]> {
+    return this.activityRepository.findByTimeRange(startTime, endTime);
+  }
+
+  /**
+   * 查找指定地点的活动
+   * @param location 活动地点
+   */
+  async findByLocation(location: string): Promise<Activity[]> {
+    return this.activityRepository.findByLocation(location);
+  }
+
+  /**
+   * 查找公开的活动
+   */
+  async findPublicActivities(): Promise<Activity[]> {
+    return this.activityRepository.findPublicActivities();
+  }
+
+  /**
+   * 查找未删除的活动
+   */
+  async findActiveActivities(): Promise<Activity[]> {
+    return this.activityRepository.findActiveActivities();
+  }
+
+  /**
+   * 查找已删除的活动
+   */
+  async findDeletedActivities(): Promise<Activity[]> {
+    return this.activityRepository.findDeletedActivities();
   }
 }

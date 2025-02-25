@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -9,44 +10,45 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from '@/users/infrastructure/persistence/relational/entities/user.entity';
-import { Theme } from '@/themes/domain/theme';
-import { Ticket } from '@/tickets/domain/ticket';
-import { Comment } from '@/comments/domain/comment';
-import { ActivityStatus, ActivityType } from '@/activities/domain/activities';
+import { ThemeEntity } from '@/themes/infrastructure/persistence/relational/entities/theme.entity';
+import { TicketEntity } from '@/tickets/infrastructure/persistence/relational/entities/ticket.entity';
+import { CommentEntity } from '@/comments/infrastructure/persistence/relational/entities/comment.entity';
+import { ActivityStatus, ActivityType } from '@/activities/domain/activity';
 
-@Entity()
+@Entity('activities')
 export class ActivityEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ comment: '活动名称' })
   name: string;
 
-  @Column()
+  @Column({ comment: '主图' })
   mainImage: string;
 
-  @Column('simple-array')
+  @Column('simple-array', { comment: '介绍图片' })
   introImages: string[];
 
-  @Column()
+  @Column({ comment: '开始时间' })
   startTime: Date;
 
-  @Column()
+  @Column({ comment: '结束时间' })
   endTime: Date;
 
-  @Column()
+  @Column({ comment: '活动地点' })
   location: string;
 
-  @Column({ default: false })
+  @Column({ default: false, comment: '是否公开' })
   isPublic: boolean;
 
-  @Column('text')
+  @Column('text', { comment: '活动描述' })
   description: string;
 
   @Column({
     type: 'enum',
     enum: ActivityStatus,
     default: ActivityStatus.DRAFT,
+    comment: '活动状态',
   })
   status: ActivityStatus;
 
@@ -54,38 +56,42 @@ export class ActivityEntity {
     type: 'enum',
     enum: ActivityType,
     default: ActivityType.FREE,
+    comment: '活动类型',
   })
   type: ActivityType;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int', comment: '最小参与人数' })
   minParticipants: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', comment: '最大参与人数' })
   maxParticipants: number;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int', comment: '候补名额' })
   waitingListLimit: number;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int', default: 0, comment: '当前参与人数' })
   currentParticipants: number;
 
-  @ManyToOne(() => UserEntity)
-  @JoinColumn()
+  @ManyToOne(() => UserEntity, { eager: true })
+  @JoinColumn({ name: 'creator_id' })
   creator: UserEntity;
 
-  @ManyToOne(() => Theme)
-  @JoinColumn()
-  theme: Theme;
+  @ManyToOne(() => ThemeEntity, { eager: true })
+  @JoinColumn({ name: 'theme_id' })
+  theme: ThemeEntity;
 
-  @OneToMany(() => Ticket, (ticket) => ticket.activity)
-  tickets: Ticket[];
+  @OneToMany(() => TicketEntity, (ticket) => ticket.activity)
+  tickets: TicketEntity[];
 
-  @OneToMany(() => Comment, (comment) => comment.activity)
-  comments: Comment[];
+  @OneToMany(() => CommentEntity, (comment) => comment.activity)
+  comments: CommentEntity[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ comment: '创建时间' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ comment: '更新时间' })
   updatedAt: Date;
+
+  @DeleteDateColumn({ comment: '删除时间' })
+  deletedAt?: Date;
 }

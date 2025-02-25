@@ -1,29 +1,12 @@
-import { Activity } from '@/activities/domain/activities';
+import { Activity } from '@/activities/domain/activity';
 import { ActivityEntity } from '../entities/activity.entity';
+import { ThemeMapper } from '@/themes/infrastructure/persistence/relational/mappers/theme.mapper';
+import { TicketMapper } from '@/tickets/infrastructure/persistence/relational/mappers/ticket.mapper';
+import { UserMapper } from '@/users/infrastructure/persistence/relational/mappers/user.mapper';
+import { CommentMapper } from '@/comments/infrastructure/persistence/relational/mappers/comment.mapper';
 
 export class ActivityMapper {
   static toDomain(entity: ActivityEntity): Activity {
-    // return new Activity({
-    //   id: entity.id,
-    //   name: entity.name,
-    //   mainImage: entity.mainImage,
-    //   introImages: entity.introImages,
-    //   startTime: entity.startTime,
-    //   endTime: entity.endTime,
-    //   location: entity.location,
-    //   isPublic: entity.isPublic,
-    //   description: entity.description,
-    //   status: entity.status,
-    //   type: entity.type,
-    //   minParticipants: entity.minParticipants,
-    //   maxParticipants: entity.maxParticipants,
-    //   waitingListLimit: entity.waitingListLimit,
-    //   currentParticipants: entity.currentParticipants,
-    //   creatorId: entity.creator?.id,
-    //   themeId: entity.theme?.id,
-    //   createdAt: entity.createdAt,
-    //   updatedAt: entity.updatedAt,
-    // });
     const domainEntity = new Activity();
     domainEntity.id = entity.id;
     domainEntity.name = entity.name;
@@ -40,32 +23,89 @@ export class ActivityMapper {
     domainEntity.maxParticipants = entity.maxParticipants;
     domainEntity.waitingListLimit = entity.waitingListLimit;
     domainEntity.currentParticipants = entity.currentParticipants;
-    domainEntity.creator = entity.creator;
-    domainEntity.theme = entity.theme;
+    domainEntity.isDeleted = entity.deletedAt !== null;
+    
+    if (entity.creator) {
+      domainEntity.creator = UserMapper.toDomain(entity.creator);
+    }
+    
+    if (entity.theme) {
+      domainEntity.theme = ThemeMapper.toDomain(entity.theme);
+    }
+    
+    if (entity.tickets) {
+      domainEntity.tickets = entity.tickets.map(ticket => 
+        TicketMapper.toDomain(ticket)
+      );
+    }
+    
+    if (entity.comments) {
+      domainEntity.comments = entity.comments.map(comment => 
+        CommentMapper.toDomain(comment)
+      );
+    }
+    
     domainEntity.createdAt = entity.createdAt;
     domainEntity.updatedAt = entity.updatedAt;
+    domainEntity.deletedAt = entity.deletedAt;
+    
     return domainEntity;
   }
 
-  static toPersistence(domainEntity: Activity): Partial<ActivityEntity> {
+  static toPersistence(domain: Activity): ActivityEntity {
     const entity = new ActivityEntity();
-    if (domainEntity.id) entity.id = domainEntity.id;
-    entity.name = domainEntity.name;
-    entity.mainImage = domainEntity.mainImage;
-    entity.introImages = domainEntity.introImages;
-    entity.startTime = domainEntity.startTime;
-    entity.endTime = domainEntity.endTime;
-    entity.location = domainEntity.location;
-    entity.isPublic = domainEntity.isPublic;
-    entity.description = domainEntity.description;
-    entity.status = domainEntity.status;
-    entity.type = domainEntity.type;
-    entity.minParticipants = domainEntity.minParticipants;
-    entity.maxParticipants = domainEntity.maxParticipants;
-    entity.waitingListLimit = domainEntity.waitingListLimit;
-    entity.currentParticipants = domainEntity.currentParticipants;
-    if (domainEntity.creator) entity.creator = { id: domainEntity.creator.id } as any;
-    if (domainEntity.theme) entity.theme = { id: domainEntity.theme.id } as any;
+    
+    if (domain.id) {
+      entity.id = domain.id;
+    }
+    
+    entity.name = domain.name;
+    entity.mainImage = domain.mainImage;
+    entity.introImages = domain.introImages;
+    entity.startTime = domain.startTime;
+    entity.endTime = domain.endTime;
+    entity.location = domain.location;
+    entity.isPublic = domain.isPublic;
+    entity.description = domain.description;
+    entity.status = domain.status;
+    entity.type = domain.type;
+    entity.minParticipants = domain.minParticipants;
+    entity.maxParticipants = domain.maxParticipants;
+    entity.waitingListLimit = domain.waitingListLimit;
+    entity.currentParticipants = domain.currentParticipants;
+    
+    if (domain.creator) {
+      entity.creator = UserMapper.toPersistence(domain.creator);
+    }
+    
+    if (domain.theme) {
+      entity.theme = ThemeMapper.toPersistence(domain.theme);
+    }
+    
+    if (domain.tickets) {
+      entity.tickets = domain.tickets.map(ticket => 
+        TicketMapper.toPersistence(ticket)
+      );
+    }
+    
+    if (domain.comments) {
+      entity.comments = domain.comments.map(comment => 
+        CommentMapper.toPersistence(comment)
+      );
+    }
+    
+    if (domain.createdAt) {
+      entity.createdAt = domain.createdAt;
+    }
+    
+    if (domain.updatedAt) {
+      entity.updatedAt = domain.updatedAt;
+    }
+    
+    if (domain.deletedAt) {
+      entity.deletedAt = domain.deletedAt;
+    }
+    
     return entity;
   }
 }

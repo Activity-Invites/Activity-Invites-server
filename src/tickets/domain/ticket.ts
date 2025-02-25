@@ -1,49 +1,78 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { Activity } from '../../activities/domain/activities';
+import { ApiProperty } from '@nestjs/swagger';
+import { Activity } from '../../activities/domain/activity';
+import { User } from '../../users/domain/user';
 
 export enum TicketStatus {
+  PENDING = 'pending',
   AVAILABLE = 'available',
   SOLD = 'sold',
   RESERVED = 'reserved',
   CANCELLED = 'cancelled',
 }
 
-@Entity()
 export class Ticket {
-  @PrimaryGeneratedColumn('uuid')
+  @ApiProperty({
+    description: '票务ID',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
   id: string;
 
-  @Column()
-  name: string;
+  @ApiProperty({
+    description: '活动信息',
+    type: () => Activity,
+  })
+  activity: Activity;
 
-  @Column('decimal', { precision: 10, scale: 2 })
-  price: number;
+  @ApiProperty({
+    description: '用户信息',
+    type: () => User,
+  })
+  user: User;
 
-  @Column('text')
-  description: string;
-
-  @Column({
-    type: 'enum',
+  @ApiProperty({
+    description: '票务状态',
     enum: TicketStatus,
-    default: TicketStatus.AVAILABLE,
+    default: TicketStatus.PENDING,
   })
   status: TicketStatus;
 
-  @ManyToOne(() => Activity, (activity) => activity.tickets)
-  @JoinColumn()
-  activity: Activity;
+  @ApiProperty({
+    description: '参加时间',
+    type: Date,
+    required: false,
+  })
+  joinTime?: Date;
 
-  @CreateDateColumn()
+  @ApiProperty({
+    description: '取消时间',
+    type: Date,
+    required: false,
+  })
+  cancelTime?: Date;
+
+  @ApiProperty({
+    description: '是否已删除',
+    type: Boolean,
+    default: false,
+  })
+  isDeleted: boolean;
+
+  @ApiProperty({
+    description: '创建时间',
+    type: Date,
+  })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @ApiProperty({
+    description: '更新时间',
+    type: Date,
+  })
   updatedAt: Date;
+
+  @ApiProperty({
+    description: '删除时间',
+    type: Date,
+    required: false,
+  })
+  deletedAt?: Date;
 }

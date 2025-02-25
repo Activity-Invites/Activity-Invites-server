@@ -1,45 +1,75 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
 import { Activity } from '@/activities/domain/activities';
 import { User } from '@/users/domain/user';
 
-@Entity()
 export class Comment {
-  @PrimaryGeneratedColumn('uuid')
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    description: '评论ID',
+  })
   id: string;
 
-  @Column('text')
+  @ApiProperty({
+    type: String,
+    description: '评论内容',
+  })
   content: string;
 
-  @ManyToOne(() => Activity, (activity) => activity.comments)
-  @JoinColumn()
+  @ApiProperty({
+    type: () => Activity,
+    description: '关联的活动',
+  })
   activity: Activity;
 
-  @ManyToOne(() => User)
-  @JoinColumn()
+  @ApiProperty({
+    type: () => User,
+    description: '评论作者',
+  })
   user: User;
 
-  @ManyToOne(() => Comment, (comment) => comment.replies, { nullable: true })
-  @JoinColumn()
-  parent: Comment;
+  @ApiProperty({
+    type: () => Comment,
+    nullable: true,
+    description: '父评论（如果这是一个回复）',
+  })
+  parent?: Comment;
 
-  @OneToMany(() => Comment, (comment) => comment.parent)
+  @ApiProperty({
+    type: () => [Comment],
+    description: '子评论列表',
+  })
   replies: Comment[];
 
-  @Column({ default: false })
+  @ApiProperty({
+    type: Boolean,
+    default: false,
+    description: '评论是否已删除',
+  })
   isDeleted: boolean;
 
-  @CreateDateColumn()
+  @ApiProperty({
+    description: '创建时间',
+  })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @ApiProperty({
+    description: '删除时间',
+    type: Date,
+    required: false,
+  })
+  deletedAt?: Date;
+
+  @ApiProperty({
+    description: '更新时间',
+  })
   updatedAt: Date;
+
+  constructor(partial?: Partial<Comment>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
+    this.replies = this.replies || [];
+    this.isDeleted = this.isDeleted || false;
+  }
 }
