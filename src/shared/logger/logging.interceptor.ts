@@ -23,21 +23,21 @@ export class LoggingInterceptor implements NestInterceptor {
       'LoggingInterceptor',
     );
     
-    if (Object.keys(body).length > 0) {
+    if (body && Object.keys(body).length > 0) {
       this.logger.debug(
         `Request Body: ${JSON.stringify(body)}`,
         'LoggingInterceptor',
       );
     }
     
-    if (Object.keys(query).length > 0) {
+    if (query && Object.keys(query).length > 0) {
       this.logger.debug(
         `Request Query: ${JSON.stringify(query)}`,
         'LoggingInterceptor',
       );
     }
 
-    if (Object.keys(params).length > 0) {
+    if (params && Object.keys(params).length > 0) {
       this.logger.debug(
         `Request Params: ${JSON.stringify(params)}`,
         'LoggingInterceptor',
