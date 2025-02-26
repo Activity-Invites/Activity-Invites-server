@@ -28,6 +28,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MongooseConfigService } from './database/mongoose-config.service';
 import { DatabaseConfig } from './database/config/database-config.type';
 import { LoggerModule } from './shared/logger/logger.module';
+import { ActivitiesModule } from './activities/activities.module';
+import { CommentsModule } from './comments/comments.module';
+import { ThemesModule } from './themes/themes.module';
+import { TicketsModule } from './tickets/tickets.module';
 
 // <database-block>
 const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
@@ -107,6 +111,10 @@ const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
     MailModule,
     MailerModule,
     LoggerModule,
+    ActivitiesModule,
+    CommentsModule,
+    TicketsModule,
+    ThemesModule,
 
     // 7. 展示层
     HomeModule,

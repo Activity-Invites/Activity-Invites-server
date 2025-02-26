@@ -14,4 +14,4 @@ import { ActivityEntity } from './entities/activity.entity';
   ],
   exports: [ActivityRepository],
 })
-export class RelationalUserPersistenceModule {}
+export class RelationalActivityPersistenceModule {}
