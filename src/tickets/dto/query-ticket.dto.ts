@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsUUID, IsString, IsIn, IsEnum } from 'class-validator';
-import { TicketStatus } from '../domain/ticket.types';
+import { TicketStatus } from '../domain/ticket';
+import { SortOrder } from '@/utils/enum/sort-order';
 
 export class FilterTicketDto {
   @ApiProperty({
@@ -32,21 +33,17 @@ export class FilterTicketDto {
 export class SortTicketDto {
   @ApiProperty({
     description: '排序字段',
-    enum: ['createdAt', 'updatedAt', 'joinTime', 'cancelTime'],
-    required: false,
+    enum: ['createdAt', 'updatedAt', 'status'],
+    required: true,
   })
-  @IsOptional()
   @IsString()
-  @IsIn(['createdAt', 'updatedAt', 'joinTime', 'cancelTime'])
-  orderBy?: string;
+  orderBy: string;
 
   @ApiProperty({
     description: '排序方向',
-    enum: ['ASC', 'DESC'],
-    required: false,
+    enum: SortOrder,
+    default: SortOrder.ASC,
   })
-  @IsOptional()
-  @IsString()
-  @IsIn(['ASC', 'DESC'])
-  order?: 'ASC' | 'DESC' = 'DESC';
+  @IsEnum(SortOrder)
+  order: SortOrder;
 }

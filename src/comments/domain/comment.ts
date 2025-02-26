@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Activity } from '@/activities/domain/activities';
+import { Activity } from '@/activities/domain/activity';
 import { User } from '@/users/domain/user';
 
 export class Comment {

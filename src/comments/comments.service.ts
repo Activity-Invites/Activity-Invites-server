@@ -5,20 +5,34 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Comment } from './domain/comment';
 import { FilterCommentDto, SortCommentDto } from './dto/query-comment.dto';
 import { IPaginationOptions } from '@/utils/types/pagination-options';
+import { IPaginationResponse } from '@/utils/types/pagination-response';
+import { Activity } from '@/activities/domain/activity';
+import { User } from '@/users/domain/user';
 
 @Injectable()
 export class CommentsService {
   constructor(private readonly commentRepository: CommentRepository) {}
 
   async create(createCommentDto: CreateCommentDto): Promise<Comment> {
-    return this.commentRepository.create(createCommentDto);
+    const comment = new Comment();
+    comment.content = createCommentDto.content;
+    comment.activity = { id: createCommentDto.activityId } as Activity;
+    comment.user = { id: createCommentDto.userId } as User;
+    comment.isDeleted = false;
+    comment.replies = [];
+
+    if (createCommentDto.parentId) {
+      comment.parent = { id: createCommentDto.parentId } as Comment;
+    }
+
+    return this.commentRepository.create(comment);
   }
 
   async findAll(options: {
     filterOptions?: FilterCommentDto;
     sortOptions?: SortCommentDto[];
     paginationOptions: IPaginationOptions;
-  }): Promise<Comment[]> {
+  }): Promise<IPaginationResponse<Comment>> {
     return this.commentRepository.findManyWithPagination(options);
   }
 
@@ -31,7 +45,11 @@ export class CommentsService {
   }
 
   async update(id: string, updateCommentDto: UpdateCommentDto): Promise<Comment> {
-    const updatedComment = await this.commentRepository.update(id, updateCommentDto);
+    const existingComment = await this.findOne(id);
+    const updatedComment = await this.commentRepository.update(id, {
+      ...existingComment,
+      ...updateCommentDto,
+    });
     if (!updatedComment) {
       throw new NotFoundException(`Comment with ID "${id}" not found`);
     }

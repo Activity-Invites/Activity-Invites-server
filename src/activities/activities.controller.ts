@@ -7,8 +7,10 @@ import {
   UseGuards,
   Query,
   Patch,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { ActivitiesService } from './activities.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { Activity, ActivityStatus } from './domain/activity';
@@ -19,9 +21,12 @@ import { RoleEnum } from '@/roles/roles.enum';
 import { CurrentUser } from '@/auth/decorators/current-user.decorator';
 import { User } from '@/users/domain/user';
 
-
+@ApiBearerAuth()
 @ApiTags('activities')
-@Controller('activities')
+@Controller({
+  path: 'activities',
+  version: '1',
+})
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ActivitiesController {
   constructor(private readonly activitiesService: ActivitiesService) {}
@@ -30,6 +35,7 @@ export class ActivitiesController {
   @Roles(RoleEnum.Admin, RoleEnum.User)
   @ApiOperation({ summary: 'Create a new activity' })
   @ApiResponse({ status: 201, type: Activity })
+  @HttpCode(HttpStatus.CREATED)
   create(
     @Body() createActivityDto: CreateActivityDto,
     @CurrentUser() user: User,

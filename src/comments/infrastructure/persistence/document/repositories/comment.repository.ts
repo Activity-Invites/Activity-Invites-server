@@ -8,6 +8,7 @@ import { CommentDocumentMapper } from '../mappers/comment.mapper';
 import { NullableType } from '@/utils/types/nullable.type';
 import { FilterCommentDto, SortCommentDto } from '@/comments/dto/query-comment.dto';
 import { IPaginationOptions } from '@/utils/types/pagination-options';
+import { IPaginationResponse } from '@/utils/types/pagination-response';
 import { DeepPartial } from '@/utils/types/deep-partial.type';
 
 @Injectable()
@@ -33,7 +34,7 @@ export class CommentsDocumentRepository implements CommentRepository {
     filterOptions?: FilterCommentDto | null;
     sortOptions?: SortCommentDto[] | null;
     paginationOptions: IPaginationOptions;
-  }): Promise<Comment[]> {
+  }): Promise<IPaginationResponse<Comment>> {
     const query = this.commentModel.find();
 
     if (filterOptions?.activityId) {
@@ -44,20 +45,32 @@ export class CommentsDocumentRepository implements CommentRepository {
       query.where('user').equals(filterOptions.userId);
     }
 
-    if (sortOptions?.length) {
-      // const sortCriteria = sortOptions.reduce(
-      //   (acc, { orderBy, order }) => ({ ...acc, [orderBy]: order }),
-      //   {},
-      // );
-      // query.sort(sortCriteria);
+    if (filterOptions?.parentId) {
+      query.where('parent').equals(filterOptions.parentId);
     }
 
-    query
-      .skip((paginationOptions.page - 1) * paginationOptions.limit)
-      .limit(paginationOptions.limit);
+    if (sortOptions?.length) {
+      const sortCriteria = sortOptions.reduce(
+        (acc, { field, order }) => ({ ...acc, [field]: order }),
+        {},
+      );
+      query.sort(sortCriteria);
+    } else {
+      // 默认按创建时间倒序排序
+      query.sort({ createdAt: -1 });
+    }
 
-    const documents = await query.exec();
-    return documents.map(doc => CommentDocumentMapper.toDomain(doc));
+    const total = await this.commentModel.countDocuments(query.getQuery());
+    
+    const documents = await query
+      .skip((paginationOptions.page - 1) * paginationOptions.limit)
+      .limit(paginationOptions.limit)
+      .exec();
+
+    return {
+      items: documents.map(doc => CommentDocumentMapper.toDomain(doc)),
+      total,
+    };
   }
 
   async findById(id: string): Promise<NullableType<Comment>> {
@@ -73,6 +86,7 @@ export class CommentsDocumentRepository implements CommentRepository {
   async findByActivityId(activityId: string): Promise<Comment[]> {
     const documents = await this.commentModel
       .find({ activity: activityId })
+      .sort({ createdAt: -1 })
       .exec();
     return documents.map(doc => CommentDocumentMapper.toDomain(doc));
   }
@@ -80,6 +94,7 @@ export class CommentsDocumentRepository implements CommentRepository {
   async findByUserId(userId: string): Promise<Comment[]> {
     const documents = await this.commentModel
       .find({ user: userId })
+      .sort({ createdAt: -1 })
       .exec();
     return documents.map(doc => CommentDocumentMapper.toDomain(doc));
   }
@@ -98,6 +113,18 @@ export class CommentsDocumentRepository implements CommentRepository {
   async remove(id: string): Promise<void> {
     await this.commentModel.findByIdAndUpdate(id, {
       $set: { isDeleted: true, deletedAt: new Date() },
+    });
+  }
+
+  async softRemove(id: string): Promise<void> {
+    await this.commentModel.findByIdAndUpdate(id, {
+      $set: { isDeleted: true, deletedAt: new Date() },
+    });
+  }
+
+  async restore(id: string): Promise<void> {
+    await this.commentModel.findByIdAndUpdate(id, {
+      $set: { isDeleted: false, deletedAt: null },
     });
   }
 }

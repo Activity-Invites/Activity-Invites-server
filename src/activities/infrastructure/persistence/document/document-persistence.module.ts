@@ -18,4 +18,4 @@ import { ActivityRepository } from '../activity.repository';
   ],
   exports: [ActivityRepository],
 })
-export class DocumentPersistenceModule {}
+export class DocumentActivityPersistenceModule {}

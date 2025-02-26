@@ -16,8 +16,8 @@ export const AppDataSource = new DataSource({
   dropSchema: false,
   keepConnectionAlive: true,
   logging: process.env.NODE_ENV !== 'production',
-  entities: [join(__dirname, '..', '**', '*.entity.{ts,js}')],
-  migrations: [join(__dirname, 'migrations', '**', '*{.ts,.js}')],
+  entities: [join(__dirname, '..', '**', '*.entity.js')],
+  migrations: [join(__dirname, 'migrations', '**', '*.js')],
   cli: {
     entitiesDir: 'src',
     subscribersDir: 'subscriber',

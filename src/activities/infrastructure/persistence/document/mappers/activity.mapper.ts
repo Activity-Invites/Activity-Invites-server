@@ -43,17 +43,17 @@ export class ActivityDocumentMapper {
     if (document.tickets && Array.isArray(document.tickets)) {
       domainEntity.tickets = document.tickets
         .filter((ticket) => typeof ticket !== 'string')
-        .map((ticket) => TicketDocumentMapper.toDomain(ticket));
+        .map((ticket) => TicketDocumentMapper.toDomain(ticket as any));
     }
 
     if (document.comments && Array.isArray(document.comments)) {
       domainEntity.comments = document.comments
         .filter((comment) => typeof comment !== 'string')
-        .map((comment) => CommentDocumentMapper.toDomain(comment));
+        .map((comment) => CommentDocumentMapper.toDomain(comment as any));
     }
 
-    domainEntity.createdAt =new Date(document.createdAt);
-    domainEntity.updatedAt =  new Date(document.updatedAt) ;
+    domainEntity.createdAt = new Date(document.createdAt);
+    domainEntity.updatedAt = new Date(document.updatedAt);
     domainEntity.deletedAt = document.deletedAt ? new Date(document.deletedAt) : undefined;
 
     return domainEntity;

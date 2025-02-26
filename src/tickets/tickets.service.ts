@@ -5,20 +5,30 @@ import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { Ticket } from './domain/ticket';
 import { FilterTicketDto, SortTicketDto } from './dto/query-ticket.dto';
 import { IPaginationOptions } from '@/utils/types/pagination-options';
+import { TicketStatus } from './domain/ticket';
+import { IPaginationResponse } from '@/utils/types/pagination-response';
+import { DeepPartial } from '@/utils/types/deep-partial.type';
 
 @Injectable()
 export class TicketsService {
   constructor(private readonly ticketRepository: TicketRepository) {}
 
   async create(createTicketDto: CreateTicketDto): Promise<Ticket> {
-    return this.ticketRepository.create(createTicketDto);
+    const ticket: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'> = {
+      activity: { id: createTicketDto.activityId } as any, // 这里只需要ID，repository会处理关联
+      user: { id: createTicketDto.userId } as any, // 这里只需要ID，repository会处理关联
+      status: TicketStatus.PENDING,
+      isDeleted: false,
+    };
+    
+    return this.ticketRepository.create(ticket);
   }
 
   async findAll(options: {
     filterOptions?: FilterTicketDto;
     sortOptions?: SortTicketDto[];
     paginationOptions: IPaginationOptions;
-  }): Promise<Ticket[]> {
+  }): Promise<IPaginationResponse<Ticket>> {
     return this.ticketRepository.findManyWithPagination(options);
   }
 
@@ -31,7 +41,17 @@ export class TicketsService {
   }
 
   async update(id: string, updateTicketDto: UpdateTicketDto): Promise<Ticket> {
-    const updatedTicket = await this.ticketRepository.update(id, updateTicketDto);
+    const updateData: DeepPartial<Ticket> = {};
+    
+    if (updateTicketDto.activityId) {
+      updateData.activity = { id: updateTicketDto.activityId } as any;
+    }
+    
+    if (updateTicketDto.userId) {
+      updateData.user = { id: updateTicketDto.userId } as any;
+    }
+
+    const updatedTicket = await this.ticketRepository.update(id, updateData);
     if (!updatedTicket) {
       throw new NotFoundException(`Ticket with ID "${id}" not found`);
     }

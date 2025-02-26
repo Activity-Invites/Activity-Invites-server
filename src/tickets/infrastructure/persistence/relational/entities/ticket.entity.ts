@@ -65,5 +65,5 @@ export class TicketEntity {
     comment: '删除时间',
     nullable: true,
   })
-  deletedAt: Date;
+  deletedAt: Date | undefined;
 }
