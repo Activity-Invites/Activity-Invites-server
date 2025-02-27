@@ -1,31 +1,31 @@
-# Architecture
+# 架构
 
 ---
 
-## Table of Contents <!-- omit in toc -->
+## 目录 <!-- omit in toc -->
 
-- [Hexagonal Architecture](#hexagonal-architecture)
-- [Motivation](#motivation)
-- [Description of the module structure](#description-of-the-module-structure)
-- [Recommendations](#recommendations)
-  - [Repository](#repository)
-- [FAQ](#faq)
-  - [Is there a way to generate a new resource (controller, service, DTOs, etc) with Hexagonal Architecture?](#is-there-a-way-to-generate-a-new-resource-controller-service-dtos-etc-with-hexagonal-architecture)
-- [Links](#links)
+- [六边形架构] (#hexagonal-architecture)
+- [动机] (#motivation)
+- [模块结构描述] (#description-of-the-module-structure)
+- [建议] (#recommendations)
+  - [仓库] (#repository)
+- [常见问题] (#faq)
+  - [是否有一种方法可以使用六边形架构生成新资源（控制器、服务、DTO 等）？] (#is-there-a-way-to-generate-a-new-resource-controller-service-dtos-etc-with-hexagonal-architecture)
+- [链接] (#links)
 
 ---
 
-## Hexagonal Architecture
+## 六边形架构
 
-NestJS Boilerplate is based on [Hexagonal Architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)). This architecture is also known as Ports and Adapters.
+NestJS 样板项目基于[六边形架构](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software))。这种架构也被称为端口与适配器模式。
 
-![Hexagonal Architecture Diagram](https://github.com/brocoders/nestjs-boilerplate/assets/6001723/6a6a763e-d1c9-43cc-910a-617cda3a71db)
+![六边形架构图](https://github.com/brocoders/nestjs-boilerplate/assets/6001723/6a6a763e-d1c9-43cc-910a-617cda3a71db)
 
-## Motivation
+## 动机
 
-The main reason for using Hexagonal Architecture is to separate the business logic from the infrastructure. This separation allows us to easily change the database, the way of uploading files, or any other infrastructure without changing the business logic.
+使用六边形架构的主要原因是将业务逻辑与基础设施分离。这种分离使我们能够轻松更改数据库、文件上传方式或任何其他基础设施，而无需更改业务逻辑。
 
-## Description of the module structure
+## 模块结构描述
 
 ```txt
 .
@@ -59,27 +59,27 @@ The main reason for using Hexagonal Architecture is to separate the business log
 └── service.ts
 ```
 
-`[DOMAIN ENTITY].ts` represents an entity used in the business logic. Domain entity has no dependencies on the database or any other infrastructure.
+`[DOMAIN_ENTITY].ts` 表示业务逻辑中使用的实体。领域实体与数据库或任何其他基础设施没有依赖关系。
 
-`[SCHEMA].ts` represents the **database structure**. It is used in the document-oriented database (MongoDB).
+`[SCHEMA].ts` 表示**数据库结构**。它用于文档型数据库（MongoDB）。
 
-`[ENTITY].ts` represents the **database structure**. It is used in the relational database (PostgreSQL).
+`[ENTITY].ts` 表示**数据库结构**。它用于关系型数据库（PostgreSQL）。
 
-`[MAPPER].ts` is a mapper that converts **database entity** to **domain entity** and vice versa.
+`[MAPPER].ts` 是一个映射器，用于将**数据库实体**转换为**领域实体**，反之亦然。
 
-`[PORT].repository.ts` is a repository **port** that defines the methods for interacting with the database.
+`[PORT].repository.ts` 是定义与数据库交互方法的仓库**端口**。
 
-`[ADAPTER].repository.ts` is a repository that implements the `[PORT].repository.ts`. It is used to interact with the database.
+`[ADAPTER].repository.ts` 是实现 `[PORT].repository.ts` 的仓库。它用于与数据库交互。
 
-`infrastructure` folder - contains all the infrastructure-related components such as `persistence`, `uploader`, `senders`, etc.
+`infrastructure` 文件夹 - 包含所有与基础设施相关的组件，如 `persistence`、`uploader`、`senders` 等。
 
-Each component has `port` and `adapters`. `Port` is interface that define the methods for interacting with the infrastructure. `Adapters` are implementations of the `port`.
+每个组件都有 `port` 和 `adapters`。`Port` 是定义与基础设施交互方法的接口。`Adapters` 是 `port` 的实现。
 
-## Recommendations
+## 建议
 
-### Repository
+### 仓库
 
-Don't try to create universal methods in the repository because they are difficult to extend during the project's life. Instead of this create methods with a single responsibility.
+不要尝试在仓库中创建通用方法，因为它们在项目生命周期中难以扩展。相反，创建具有单一职责的方法。
 
 ```typescript
 // ❌
@@ -107,20 +107,20 @@ export class UsersRelationalRepository implements UserRepository {
 
 ---
 
-## FAQ
+## 常见问题
 
-### Is there a way to generate a new resource (controller, service, DTOs, etc) with Hexagonal Architecture?
+### 是否有一种方法可以使用六边形架构生成新资源（控制器、服务、DTO 等）？
 
-Yes, you can use the [CLI](cli.md) to generate a new resource with Hexagonal Architecture.
-
----
-
-## Links
-
-- [Dependency Inversion Principle](https://trilon.io/blog/dependency-inversion-principle) with NestJS.
+是的，您可以使用 [CLI](cli.md) 通过六边形架构生成新资源。
 
 ---
 
-Previous: [Installing and Running](installing-and-running.md)
+## 链接
 
-Next: [Command Line Interface](cli.md)
+- 使用 NestJS 的[依赖倒置原则](https://trilon.io/blog/dependency-inversion-principle)。
+
+---
+
+上一篇：[安装和运行](installing-and-running.md)
+
+下一篇：[命令行界面](cli.md)

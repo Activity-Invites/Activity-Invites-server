@@ -1,34 +1,34 @@
-# Tests
+# 测试
 
-## Table of Contents <!-- omit in toc -->
+## 目录 <!-- omit in toc -->
 
-- [Unit Tests](#unit-tests)
-- [E2E Tests](#e2e-tests)
-- [Tests in Docker](#tests-in-docker)
-  - [For relational database](#for-relational-database)
-  - [For document database](#for-document-database)
+- [单元测试] (#unit-tests)
+- [端到端测试] (#e2e-tests)
+- [Docker 中的测试] (#tests-in-docker)
+  - [针对关系型数据库] (#for-relational-database)
+  - [针对文档型数据库] (#for-document-database)
 
-## Unit Tests
+## 单元测试
 
 ```bash
 npm run test
 ```
 
-## E2E Tests
+## 端到端测试
 
 ```bash
 npm run test:e2e
 ```
 
-## Tests in Docker
+## Docker 中的测试
 
-### For relational database
+### 针对关系型数据库
 
 ```bash
 npm run test:e2e:relational:docker
 ```
 
-### For document database
+### 针对文档型数据库
 
 ```bash
 npm run test:e2e:document:docker
@@ -36,6 +36,6 @@ npm run test:e2e:document:docker
 
 ---
 
-Previous: [File uploading](file-uploading.md)
+上一篇：[文件上传](file-uploading.md)
 
-Next: [Benchmarking](benchmarking.md)
+下一篇：[基准测试](benchmarking.md)

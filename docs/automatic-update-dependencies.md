@@ -1,7 +1,7 @@
-# Automatic update of dependencies
+# 自动更新依赖项
 
-If you want to automatically update dependencies, you can connect [Renovate](https://github.com/marketplace/renovate) for your project.
+如果您想自动更新依赖项，可以为您的项目连接 [Renovate](https://github.com/marketplace/renovate)。
 
 ---
 
-Previous: [Benchmarking](benchmarking.md)
+上一篇：[基准测试] (benchmarking.md)

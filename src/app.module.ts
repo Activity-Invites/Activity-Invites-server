@@ -42,8 +42,20 @@ const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
     });
 // </database-block>
 
+import { commentsModule } from './comments/comments.module';
+
+import { ticketsModule } from './tickets/tickets.module';
+
+import { activitiesModule } from './activities/activities.module';
+
+import { themesModule } from './themes/themes.module';
+
 @Module({
   imports: [
+    themesModule,
+    activitiesModule,
+    ticketsModule,
+    commentsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [

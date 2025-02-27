@@ -51,41 +51,41 @@ import removeRelationalPropertyGeneration from './scripts/property-generation-sc
     },
   );
 
-  if (response.database === 'pg-mongo') {
-    removeRelationalResourceGeneration();
-    removeDocumentResourceGeneration();
-    removeDocumentPropertyGeneration();
-    removeRelationalPropertyGeneration();
-  }
+  // if (response.database === 'pg-mongo') {
+  //   removeRelationalResourceGeneration();
+  //   removeDocumentResourceGeneration();
+  //   removeDocumentPropertyGeneration();
+  //   removeRelationalPropertyGeneration();
+  // }
 
-  if (response.database === 'mongo') {
-    removePostgreSql();
-    removeRelationalResourceGeneration();
-    removeRelationalPropertyGeneration();
-    removeAllDbResourceGeneration();
-    removeAllDbPropertyGeneration();
-  }
+  // if (response.database === 'mongo') {
+  //   removePostgreSql();
+  //   removeRelationalResourceGeneration();
+  //   removeRelationalPropertyGeneration();
+  //   removeAllDbResourceGeneration();
+  //   removeAllDbPropertyGeneration();
+  // }
 
-  if (response.database === 'pg') {
-    removeMongoDb();
-    removeDocumentResourceGeneration();
-    removeDocumentPropertyGeneration();
-    removeAllDbResourceGeneration();
-    removeAllDbPropertyGeneration();
-  }
+  // if (response.database === 'pg') {
+  //   removeMongoDb();
+  //   removeDocumentResourceGeneration();
+  //   removeDocumentPropertyGeneration();
+  //   removeAllDbResourceGeneration();
+  //   removeAllDbPropertyGeneration();
+  // }
 
-  if (!response.isAuthFacebook) {
-    removeFacebookAuth();
-  }
+  // if (!response.isAuthFacebook) {
+  //   removeFacebookAuth();
+  // }
 
-  if (!response.isAuthGoogle) {
-    removeGoogleAuth();
-  }
+  // if (!response.isAuthGoogle) {
+  //   removeGoogleAuth();
+  // }
 
-  if (!response.isAuthApple) {
-    removeAppleAuth();
-  }
+  // if (!response.isAuthApple) {
+  //   removeAppleAuth();
+  // }
 
-  removeInstallScripts();
+  // removeInstallScripts();
   process.exit(0);
 })();

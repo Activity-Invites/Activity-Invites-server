@@ -1,85 +1,88 @@
-# Command Line Interface (CLI)
+# 命令行界面 (CLI)
 
 ---
 
-## Table of Contents <!-- omit in toc -->
+## 目录 <!-- omit in toc -->
 
-- [Generate resource](#generate-resource)
-  - [For document oriented database (MongoDB + Mongoose)](#for-document-oriented-database-mongodb--mongoose)
-  - [For relational database (PostgreSQL + TypeORM)](#for-relational-database-postgresql--typeorm)
-    - [Video guideline for relational database (PostgreSQL + TypeORM)](#video-guideline-for-relational-database-postgresql--typeorm)
-  - [For both databases](#for-both-databases)
-- [Add property to resource](#add-property-to-resource)
-  - [Property for document oriented database (MongoDB + Mongoose)](#property-for-document-oriented-database-mongodb--mongoose)
-  - [Property for relational database (PostgreSQL + TypeORM)](#property-for-relational-database-postgresql--typeorm)
-    - [Video guideline how to add property for relational database (PostgreSQL + TypeORM)](#video-guideline-how-to-add-property-for-relational-database-postgresql--typeorm)
-  - [Property for both databases](#property-for-both-databases)
+- [生成资源] (#generate-resource)
+  - [针对文档型数据库 (MongoDB + Mongoose)] (#for-document-oriented-database-mongodb--mongoose)
+  - [针对关系型数据库 (PostgreSQL + TypeORM)] (#for-relational-database-postgresql--typeorm)
+    - [关系型数据库视频指南 (PostgreSQL + TypeORM)] (#video-guideline-for-relational-database-postgresql--typeorm)
+  - [针对两种数据库] (#for-both-databases)
+- [向资源添加属性] (#add-property-to-resource)
+  - [文档型数据库的属性 (MongoDB + Mongoose)] (#property-for-document-oriented-database-mongodb--mongoose)
+  - [关系型数据库的属性 (PostgreSQL + TypeORM)] (#property-for-relational-database-postgresql--typeorm)
+    - [如何向关系型数据库添加属性的视频指南 (PostgreSQL + TypeORM)] (#video-guideline-how-to-add-property-for-relational-database-postgresql--typeorm)
+  - [针对两种数据库的属性] (#property-for-both-databases)
 
 ---
 
-## Generate resource
+## 生成资源
 
-Generate resource with the following commands:
+使用以下命令生成资源：
 
-### For document oriented database (MongoDB + Mongoose)
+### 针对文档型数据库 (MongoDB + Mongoose)
   
 ```bash
 npm run generate:resource:document -- --name ResourceName
 ```
 
-Example:
+示例：
 
 ```bash
 npm run generate:resource:document -- --name Category
 ```
 
-### For relational database (PostgreSQL + TypeORM)
+### 针对关系型数据库 (PostgreSQL + TypeORM)
 
 ```bash
 npm run generate:resource:relational -- --name ResourceName
 ```
 
-Example:
+示例：
 
 ```bash
 npm run generate:resource:relational -- --name Category
 ```
 
-#### Video guideline for relational database (PostgreSQL + TypeORM)
+#### 关系型数据库视频指南 (PostgreSQL + TypeORM)
 
 <https://github.com/user-attachments/assets/f7f91a7d-f9ff-4653-a78a-152ac5e7a95d>
 
-### For both databases
+### 针对两种数据库
 
 ```bash
 npm run generate:resource:all-db -- --name ResourceName
 ```
 
-Example:
+示例：
 
 ```bash
 npm run generate:resource:all-db -- --name Category
+--------
+npm run migration:generate -- src/database/migrations/xxx
+npm run migration:run
 ```
 
-## Add property to resource
+## 向资源添加属性
 
-### Property for document oriented database (MongoDB + Mongoose)
+### 文档型数据库的属性 (MongoDB + Mongoose)
 
 ```bash
 npm run add:property:to-document
 ```
 
-### Property for relational database (PostgreSQL + TypeORM)
+### 关系型数据库的属性 (PostgreSQL + TypeORM)
 
 ```bash
 npm run add:property:to-relational
 ```
 
-#### Video guideline how to add property for relational database (PostgreSQL + TypeORM)
+#### 如何向关系型数据库添加属性的视频指南 (PostgreSQL + TypeORM)
 
 <https://github.com/user-attachments/assets/95b9d70a-70cf-442a-b8bf-a73d32810e0c>
 
-### Property for both databases
+### 针对两种数据库的属性
 
 ```bash
 npm run add:property:to-all-db
@@ -87,6 +90,6 @@ npm run add:property:to-all-db
 
 ---
 
-Previous: [Architecture](architecture.md)
+上一篇：[架构] (architecture.md)
 
-Next: [Working with database](database.md)
+下一篇：[使用数据库] (database.md)
