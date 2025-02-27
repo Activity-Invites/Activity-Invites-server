@@ -1,21 +1,24 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CommentSchema, CommentSchemaClass } from './entities/comment.schema';
-import { CommentRepository } from '../comment.repository';
-import { CommentsDocumentRepository } from './repositories/comment.repository';
+import {
+  commentsSchema,
+  commentsSchemaClass,
+} from './entities/comments.schema';
+import { commentsRepository } from '../comments.repository';
+import { commentsDocumentRepository } from './repositories/comments.repository';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: CommentSchemaClass.name, schema: CommentSchema },
+      { name: commentsSchemaClass.name, schema: commentsSchema },
     ]),
   ],
   providers: [
     {
-      provide: CommentRepository,
-      useClass: CommentsDocumentRepository,
+      provide: commentsRepository,
+      useClass: commentsDocumentRepository,
     },
   ],
-  exports: [CommentRepository],
+  exports: [commentsRepository],
 })
-export class DocumentCommentPersistenceModule {}
+export class DocumentcommentsPersistenceModule {}

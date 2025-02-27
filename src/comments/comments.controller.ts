@@ -6,135 +6,106 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
   UseGuards,
+  Query,
 } from '@nestjs/common';
-import { CommentsService } from './comments.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
-import { FilterCommentDto, SortCommentDto } from './dto/query-comment.dto';
-import { IPaginationOptions } from '@/utils/types/pagination-options';
-import { IPaginationResponse } from '@/utils/types/pagination-response';
-import { Comment } from './domain/comment';
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
-import { CurrentUser } from '@/auth/decorators/current-user.decorator';
-import { User } from '@/users/domain/user';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { RoleEnum } from '../roles/roles.enum';
-import { Roles } from '../roles/roles.decorator';
+import { commentsService } from './comments.service';
+import { CreatecommentsDto } from './dto/create-comments.dto';
+import { UpdatecommentsDto } from './dto/update-comments.dto';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { comments } from './domain/comments';
+import { AuthGuard } from '@nestjs/passport';
+import {
+  InfinityPaginationResponse,
+  InfinityPaginationResponseDto,
+} from '../utils/dto/infinity-pagination-response.dto';
+import { infinityPagination } from '../utils/infinity-pagination';
+import { FindAllcommentsDto } from './dto/find-all-comments.dto';
 
-@ApiTags('评论')
-@Controller('comments')
-@UseGuards(JwtAuthGuard)
-export class CommentsController {
-  constructor(private readonly commentsService: CommentsService) {}
+@ApiTags('Comments')
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
+@Controller({
+  path: 'comments',
+  version: '1',
+})
+export class commentsController {
+  constructor(private readonly commentsService: commentsService) {}
 
   @Post()
-  @Roles(RoleEnum.Admin, RoleEnum.User)
-  @ApiOperation({ summary: '创建评论' })
-  @ApiResponse({
-    status: 201,
-    description: '评论创建成功',
-    type: Comment,
+  @ApiCreatedResponse({
+    type: comments,
   })
-  create(
-    @Body() createCommentDto: CreateCommentDto,
-    @CurrentUser() user: User,
-  ): Promise<Comment> {
-    // Inject user information into the DTO
-    return this.commentsService.create({
-      ...createCommentDto,
-      userId: String(user.id),
-    });
+  create(@Body() createcommentsDto: CreatecommentsDto) {
+    return this.commentsService.create(createcommentsDto);
   }
 
   @Get()
-  @ApiOperation({ summary: '获取评论列表' })
-  @ApiResponse({
-    status: 200,
-    description: '成功获取评论列表',
-    type: Comment,
-    isArray: true,
+  @ApiOkResponse({
+    type: InfinityPaginationResponse(comments),
   })
-  findAll(
-    @Query() filterOptions: FilterCommentDto,
-    @Query() sortOptions: SortCommentDto[],
-    @Query('page') page = 1,
-    @Query('limit') limit = 10,
-  ): Promise<IPaginationResponse<Comment>> {
-    const paginationOptions: IPaginationOptions = {
-      page,
-      limit,
-    };
+  async findAll(
+    @Query() query: FindAllcommentsDto,
+  ): Promise<InfinityPaginationResponseDto<comments>> {
+    const page = query?.page ?? 1;
+    let limit = query?.limit ?? 10;
+    if (limit > 50) {
+      limit = 50;
+    }
 
-    return this.commentsService.findAll({
-      filterOptions,
-      sortOptions,
-      paginationOptions,
-    });
+    return infinityPagination(
+      await this.commentsService.findAllWithPagination({
+        paginationOptions: {
+          page,
+          limit,
+        },
+      }),
+      { page, limit },
+    );
   }
 
   @Get(':id')
-  @ApiOperation({ summary: '获取指定评论' })
-  @ApiResponse({
-    status: 200,
-    description: '成功获取评论',
-    type: Comment,
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
   })
-  findOne(@Param('id') id: string): Promise<Comment> {
-    return this.commentsService.findOne(id);
+  @ApiOkResponse({
+    type: comments,
+  })
+  findById(@Param('id') id: string) {
+    return this.commentsService.findById(id);
   }
 
   @Patch(':id')
-  @Roles(RoleEnum.Admin, RoleEnum.User)
-  @ApiOperation({ summary: '更新评论' })
-  @ApiResponse({
-    status: 200,
-    description: '评论更新成功',
-    type: Comment,
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+  })
+  @ApiOkResponse({
+    type: comments,
   })
   update(
     @Param('id') id: string,
-    @Body() updateCommentDto: UpdateCommentDto,
-    @CurrentUser() user: User,
-  ): Promise<Comment> {
-    // Add authorization check in service layer
-    return this.commentsService.update(id, updateCommentDto);
+    @Body() updatecommentsDto: UpdatecommentsDto,
+  ) {
+    return this.commentsService.update(id, updatecommentsDto);
   }
 
   @Delete(':id')
-  @Roles(RoleEnum.Admin, RoleEnum.User)
-  @ApiOperation({ summary: '删除评论' })
-  @ApiResponse({
-    status: 200,
-    description: '评论删除成功',
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
   })
-  remove(@Param('id') id: string, @CurrentUser() user: User): Promise<void> {
-    // Add authorization check in service layer
+  remove(@Param('id') id: string) {
     return this.commentsService.remove(id);
-  }
-
-  @Get('activity/:activityId')
-  @ApiOperation({ summary: '获取活动的所有评论' })
-  @ApiResponse({
-    status: 200,
-    description: '成功获取活动的评论列表',
-    type: Comment,
-    isArray: true,
-  })
-  findByActivityId(@Param('activityId') activityId: string): Promise<Comment[]> {
-    return this.commentsService.findByActivityId(activityId);
-  }
-
-  @Get('user/:userId')
-  @ApiOperation({ summary: '获取用户的所有评论' })
-  @ApiResponse({
-    status: 200,
-    description: '成功获取用户的评论列表',
-    type: Comment,
-    isArray: true,
-  })
-  findByUserId(@Param('userId') userId: string): Promise<Comment[]> {
-    return this.commentsService.findByUserId(userId);
   }
 }

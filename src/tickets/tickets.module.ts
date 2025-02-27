@@ -1,18 +1,23 @@
 import { Module } from '@nestjs/common';
-import { TicketsService } from './tickets.service';
-import { TicketsController } from './tickets.controller';
-import { RelationalTicketPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
-import { DocumentTicketPersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
-import { ConfigService } from '@nestjs/config';
+import { ticketsService } from './tickets.service';
+import { ticketsController } from './tickets.controller';
+import { RelationalticketsPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
+import databaseConfig from '../database/config/database.config';
+import { DatabaseConfig } from '../database/config/database-config.type';
+import { DocumentticketsPersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
+
+const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
+  .isDocumentDatabase
+  ? DocumentticketsPersistenceModule
+  : RelationalticketsPersistenceModule;
 
 @Module({
   imports: [
-    process.env.DATABASE_TYPE === 'mongodb'
-      ? DocumentTicketPersistenceModule
-      : RelationalTicketPersistenceModule,
+    // import modules, etc.
+    infrastructurePersistenceModule,
   ],
-  controllers: [TicketsController],
-  providers: [TicketsService, ConfigService],
-  exports: [TicketsService],
+  controllers: [ticketsController],
+  providers: [ticketsService],
+  exports: [ticketsService, infrastructurePersistenceModule],
 })
-export class TicketsModule {}
+export class ticketsModule {}

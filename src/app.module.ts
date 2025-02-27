@@ -47,11 +47,20 @@ const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
     });
 // </database-block>
 
+import { commentsModule } from './comments/comments.module';
+
+import { ticketsModule } from './tickets/tickets.module';
+
+import { activitiesModule } from './activities/activities.module';
+
+import { themesModule } from './themes/themes.module';
+
 @Module({
   imports: [
-    // 1. 核心配置
-    // 加载并全局注册各种配置文件
-    // 设置环境变量文件路径
+    themesModule,
+    activitiesModule,
+    ticketsModule,
+    commentsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [

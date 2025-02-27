@@ -1,19 +1,19 @@
-# Serialization
+# 序列化
 
-For serialization boilerplate use [class-transformer](https://www.npmjs.com/package/class-transformer) and global interceptor `ClassSerializerInterceptor`.
-
----
-
-## Table of Contents <!-- omit in toc -->
-
-- [Hide private property](#hide-private-property)
-- [Show private property for admins](#show-private-property-for-admins)
+对于序列化样板，使用 [class-transformer](https://www.npmjs.com/package/class-transformer) 和全局拦截器 `ClassSerializerInterceptor`。
 
 ---
 
-## Hide private property
+## 目录 <!-- omit in toc -->
 
-If you need to hide some property in the entity you can use `@Exclude({ toPlainOnly: true })` on the column.
+- [隐藏私有属性] (#hide-private-property)
+- [为管理员显示私有属性] (#show-private-property-for-admins)
+
+---
+
+## 隐藏私有属性
+
+如果您需要在实体中隐藏某些属性，可以在列上使用 `@Exclude({ toPlainOnly: true })`。
 
 ```ts
 // /src/users/entities/user.entity.ts
@@ -22,24 +22,24 @@ import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User extends EntityRelationalHelper {
-  // Some code here...
+  // 此处是其他代码...
 
   @Column({ nullable: true })
   @Exclude({ toPlainOnly: true })
   password: string;
 
-  // Some code here...
+  // 此处是其他代码...
 }
 ```
 
-## Show private property for admins
+## 为管理员显示私有属性
 
-1. Create a controller that returns data only for admin and add `@SerializeOptions({ groups: ['admin'] })` to method:
+1. 创建一个只返回管理员数据的控制器，并在方法上添加 `@SerializeOptions({ groups: ['admin'] })`：
 
    ```ts
    // /src/users/users.controller.ts
 
-   // Some code here...
+   // 此处是其他代码...
 
    @ApiBearerAuth()
    @Roles(RoleEnum.admin)
@@ -51,7 +51,7 @@ export class User extends EntityRelationalHelper {
    export class UsersController {
      constructor(private readonly usersService: UsersService) {}
 
-     // Some code here...
+     // 此处是其他代码...
 
      @SerializeOptions({
        groups: ['admin'],
@@ -62,33 +62,33 @@ export class User extends EntityRelationalHelper {
        return this.usersService.findOne({ id: +id });
      }
 
-     // Some code here...
+     // 此处是其他代码...
    }
    ```
 
-1. In the entity add `@Expose({ groups: ['admin'] })` to the column that should be exposed for admin:
+1. 在实体中，对应该为管理员公开的列添加 `@Expose({ groups: ['admin'] })`：
 
    ```ts
    // /src/users/entities/user.entity.ts
 
-   // Some code here...
+   // 此处是其他代码...
 
    import { Expose } from 'class-transformer';
 
    @Entity()
    export class User extends EntityRelationalHelper {
-     // Some code here...
+     // 此处是其他代码...
 
      @Column({ unique: true, nullable: true })
      @Expose({ groups: ['admin'] })
      email: string | null;
 
-     // Some code here...
+     // 此处是其他代码...
    }
    ```
 
 ---
 
-Previous: [Auth](auth.md)
+上一篇：[认证](auth.md)
 
-Next: [File uploading](file-uploading.md)
+下一篇：[文件上传](file-uploading.md)

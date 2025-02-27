@@ -1,74 +1,66 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CommentRepository } from './infrastructure/persistence/comment.repository';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
-import { Comment } from './domain/comment';
-import { FilterCommentDto, SortCommentDto } from './dto/query-comment.dto';
-import { IPaginationOptions } from '@/utils/types/pagination-options';
-import { IPaginationResponse } from '@/utils/types/pagination-response';
-import { Activity } from '@/activities/domain/activity';
-import { User } from '@/users/domain/user';
+import { Injectable } from '@nestjs/common';
+import { CreatecommentsDto } from './dto/create-comments.dto';
+import { UpdatecommentsDto } from './dto/update-comments.dto';
+import { commentsRepository } from './infrastructure/persistence/comments.repository';
+import { IPaginationOptions } from '../utils/types/pagination-options';
+import { comments } from './domain/comments';
 
 @Injectable()
-export class CommentsService {
-  constructor(private readonly commentRepository: CommentRepository) {}
+export class commentsService {
+  constructor(
+    // Dependencies here
+    private readonly commentsRepository: commentsRepository,
+  ) {}
 
-  async create(createCommentDto: CreateCommentDto): Promise<Comment> {
-    const comment = new Comment();
-    comment.content = createCommentDto.content;
-    comment.activity = { id: createCommentDto.activityId } as Activity;
-    comment.user = { id: createCommentDto.userId } as User;
-    comment.isDeleted = false;
-    comment.replies = [];
+  async create(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    createcommentsDto: CreatecommentsDto,
+  ) {
+    // Do not remove comment below.
+    // <creating-property />
 
-    if (createCommentDto.parentId) {
-      comment.parent = { id: createCommentDto.parentId } as Comment;
-    }
-
-    return this.commentRepository.create(comment);
-  }
-
-  async findAll(options: {
-    filterOptions?: FilterCommentDto;
-    sortOptions?: SortCommentDto[];
-    paginationOptions: IPaginationOptions;
-  }): Promise<IPaginationResponse<Comment>> {
-    return this.commentRepository.findManyWithPagination(options);
-  }
-
-  async findOne(id: string): Promise<Comment> {
-    const comment = await this.commentRepository.findById(id);
-    if (!comment) {
-      throw new NotFoundException(`Comment with ID "${id}" not found`);
-    }
-    return comment;
-  }
-
-  async update(id: string, updateCommentDto: UpdateCommentDto): Promise<Comment> {
-    const existingComment = await this.findOne(id);
-    const updatedComment = await this.commentRepository.update(id, {
-      ...existingComment,
-      ...updateCommentDto,
+    return this.commentsRepository.create({
+      // Do not remove comment below.
+      // <creating-property-payload />
     });
-    if (!updatedComment) {
-      throw new NotFoundException(`Comment with ID "${id}" not found`);
-    }
-    return updatedComment;
   }
 
-  async remove(id: string): Promise<void> {
-    const comment = await this.commentRepository.findById(id);
-    if (!comment) {
-      throw new NotFoundException(`Comment with ID "${id}" not found`);
-    }
-    await this.commentRepository.remove(id);
+  findAllWithPagination({
+    paginationOptions,
+  }: {
+    paginationOptions: IPaginationOptions;
+  }) {
+    return this.commentsRepository.findAllWithPagination({
+      paginationOptions: {
+        page: paginationOptions.page,
+        limit: paginationOptions.limit,
+      },
+    });
   }
 
-  async findByActivityId(activityId: string): Promise<Comment[]> {
-    return this.commentRepository.findByActivityId(activityId);
+  findById(id: comments['id']) {
+    return this.commentsRepository.findById(id);
   }
 
-  async findByUserId(userId: string): Promise<Comment[]> {
-    return this.commentRepository.findByUserId(userId);
+  findByIds(ids: comments['id'][]) {
+    return this.commentsRepository.findByIds(ids);
+  }
+
+  async update(
+    id: comments['id'],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    updatecommentsDto: UpdatecommentsDto,
+  ) {
+    // Do not remove comment below.
+    // <updating-property />
+
+    return this.commentsRepository.update(id, {
+      // Do not remove comment below.
+      // <updating-property-payload />
+    });
+  }
+
+  remove(id: comments['id']) {
+    return this.commentsRepository.remove(id);
   }
 }

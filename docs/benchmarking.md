@@ -1,10 +1,10 @@
-# Test benchmarking
+# 测试基准
 
-## Table of Contents <!-- omit in toc -->
+## 目录 <!-- omit in toc -->
 
-- [Apache Benchmark](#apache-benchmark)
+- [Apache 基准测试] (#apache-benchmark)
 
-## Apache Benchmark
+## Apache 基准测试
 
 ```bash
 docker run --rm jordi/ab -n 100 -c 100 -T application/json -H "Authorization: Bearer USER_TOKEN" -v 2 http://<server_ip>:3000/api/v1/users
@@ -12,6 +12,6 @@ docker run --rm jordi/ab -n 100 -c 100 -T application/json -H "Authorization: Be
 
 ---
 
-Previous: [Tests](tests.md)
+上一篇：[测试] (tests.md)
 
-Next: [Automatic update of dependencies](automatic-update-dependencies.md)
+下一篇：[自动更新依赖项] (automatic-update-dependencies.md)

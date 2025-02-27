@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
-import { ActivityRepository } from '../activity.repository';
-import { RelationalActivityRepository } from './repositories/activity.repository';
+import { activitiesRepository } from '../activities.repository';
+import { activitiesRelationalRepository } from './repositories/activities.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ActivityEntity } from './entities/activity.entity';
+import { activitiesEntity } from './entities/activities.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ActivityEntity])],
+  imports: [TypeOrmModule.forFeature([activitiesEntity])],
   providers: [
     {
-      provide: ActivityRepository,
-      useClass: RelationalActivityRepository,
+      provide: activitiesRepository,
+      useClass: activitiesRelationalRepository,
     },
   ],
-  exports: [ActivityRepository],
+  exports: [activitiesRepository],
 })
-export class RelationalActivityPersistenceModule {}
+export class RelationalactivitiesPersistenceModule {}

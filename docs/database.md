@@ -1,43 +1,43 @@
-# Work with database
+# 使用数据库
 
 ---
 
-## Table of Contents <!-- omit in toc -->
+## 目录 <!-- omit in toc -->
 
-- [About databases](#about-databases)
-- [Working with database schema (TypeORM)](#working-with-database-schema-typeorm)
-  - [Generate migration](#generate-migration)
-  - [Run migration](#run-migration)
-  - [Revert migration](#revert-migration)
-  - [Drop all tables in database](#drop-all-tables-in-database)
-- [Working with database schema (Mongoose)](#working-with-database-schema-mongoose)
-  - [Create schema](#create-schema)
-- [Seeding (TypeORM)](#seeding-typeorm)
-  - [Creating seeds (TypeORM)](#creating-seeds-typeorm)
-  - [Run seed (TypeORM)](#run-seed-typeorm)
-  - [Factory and Faker (TypeORM)](#factory-and-faker-typeorm)
-- [Seeding (Mongoose)](#seeding-mongoose)
-  - [Creating seeds (Mongoose)](#creating-seeds-mongoose)
-  - [Run seed (Mongoose)](#run-seed-mongoose)
-- [Performance optimization (PostgreSQL + TypeORM)](#performance-optimization-postgresql--typeorm)
-  - [Indexes and Foreign Keys](#indexes-and-foreign-keys)
-  - [Max connections](#max-connections)
-- [Performance optimization (MongoDB + Mongoose)](#performance-optimization-mongodb--mongoose)
-  - [Design schema](#design-schema)
+- [关于数据库] (#about-databases)
+- [使用数据库架构 (TypeORM)] (#working-with-database-schema-typeorm)
+  - [生成迁移] (#generate-migration)
+  - [运行迁移] (#run-migration)
+  - [回滚迁移] (#revert-migration)
+  - [删除数据库中的所有表] (#drop-all-tables-in-database)
+- [使用数据库架构 (Mongoose)] (#working-with-database-schema-mongoose)
+  - [创建架构] (#create-schema)
+- [数据填充 (TypeORM)] (#seeding-typeorm)
+  - [创建种子 (TypeORM)] (#creating-seeds-typeorm)
+  - [运行种子 (TypeORM)] (#run-seed-typeorm)
+  - [工厂和假数据 (TypeORM)] (#factory-and-faker-typeorm)
+- [数据填充 (Mongoose)] (#seeding-mongoose)
+  - [创建种子 (Mongoose)] (#creating-seeds-mongoose)
+  - [运行种子 (Mongoose)] (#run-seed-mongoose)
+- [性能优化 (PostgreSQL + TypeORM)] (#performance-optimization-postgresql--typeorm)
+  - [索引和外键] (#indexes-and-foreign-keys)
+  - [最大连接数] (#max-connections)
+- [性能优化 (MongoDB + Mongoose)] (#performance-optimization-mongodb--mongoose)
+  - [设计架构] (#design-schema)
 
 ---
 
-## About databases
+## 关于数据库
 
-Boilerplate supports two types of databases: PostgreSQL with TypeORM and MongoDB with Mongoose. You can choose one of them or use both in your project. The choice of database depends on the requirements of your project.
+样板支持两种类型的数据库：使用 TypeORM 的 PostgreSQL 和使用 Mongoose 的 MongoDB。您可以选择其中一种或在项目中同时使用两种。数据库的选择取决于您项目的需求。
 
-For support of both databases used [Hexagonal Architecture](architecture.md#hexagonal-architecture).
+为了支持两种数据库，使用了[六边形架构] (architecture.md#hexagonal-architecture)。
 
-## Working with database schema (TypeORM)
+## 使用数据库架构 (TypeORM)
 
-### Generate migration
+### 生成迁移
 
-1. Create entity file with extension `.entity.ts`. For example `post.entity.ts`:
+1. 创建扩展名为 `.entity.ts` 的实体文件。例如 `post.entity.ts`：
 
    ```ts
    // /src/posts/infrastructure/persistence/relational/entities/post.entity.ts
@@ -56,31 +56,31 @@ For support of both databases used [Hexagonal Architecture](architecture.md#hexa
      @Column()
      body: string;
 
-     // Here any fields that you need
+     // 这里是您需要的任何字段
    }
    ```
 
-1. Next, generate migration file:
+1. 接下来，生成迁移文件：
 
    ```bash
    npm run migration:generate -- src/database/migrations/CreatePostTable
    ```
 
-1. Apply this migration to database via [npm run migration:run](#run-migration).
+1. 通过 [npm run migration:run] (#run-migration) 将此迁移应用到数据库。
 
-### Run migration
+### 运行迁移
 
 ```bash
 npm run migration:run
 ```
 
-### Revert migration
+### 回滚迁移
 
 ```bash
 npm run migration:revert
 ```
 
-### Drop all tables in database
+### 删除数据库中的所有表
 
 ```bash
 npm run schema:drop
@@ -88,11 +88,11 @@ npm run schema:drop
 
 ---
 
-## Working with database schema (Mongoose)
+## 使用数据库架构 (Mongoose)
 
-### Create schema
+### 创建架构
 
-1. Create entity file with extension `.schema.ts`. For example `post.schema.ts`:
+1. 创建扩展名为 `.schema.ts` 的实体文件。例如 `post.schema.ts`：
 
    ```ts
    // /src/posts/infrastructure/persistence/document/entities/post.schema.ts
@@ -116,7 +116,7 @@ npm run schema:drop
      @Prop()
      body: string;
 
-     // Here any fields that you need
+     // 这里是您需要的任何字段
    }
 
    export const PostSchema = SchemaFactory.createForClass(PostSchemaClass);
@@ -124,30 +124,30 @@ npm run schema:drop
 
 ---
 
-## Seeding (TypeORM)
+## 数据填充 (TypeORM)
 
-### Creating seeds (TypeORM)
+### 创建种子 (TypeORM)
 
-1. Create seed file with `npm run seed:create:relational -- --name Post`. Where `Post` is name of entity.
-1. Go to `src/database/seeds/relational/post/post-seed.service.ts`.
-1. In `run` method extend your logic.
-1. Run [npm run seed:run:relational](#run-seed-typeorm)
+1. 使用 `npm run seed:create:relational -- --name Post` 创建种子文件。其中 `Post` 是实体的名称。
+1. 转到 `src/database/seeds/relational/post/post-seed.service.ts`。
+1. 在 `run` 方法中扩展您的逻辑。
+1. 运行 [npm run seed:run:relational] (#run-seed-typeorm)
 
-### Run seed (TypeORM)
+### 运行种子 (TypeORM)
 
 ```bash
 npm run seed:run:relational
 ```
 
-### Factory and Faker (TypeORM)
+### 工厂和假数据 (TypeORM)
 
-1. Install faker:
+1. 安装 faker：
 
     ```bash
     npm i --save-dev @faker-js/faker
     ```
 
-1. Create `src/database/seeds/relational/user/user.factory.ts`:
+1. 创建 `src/database/seeds/relational/user/user.factory.ts`：
 
     ```ts
     import { faker } from '@faker-js/faker';
@@ -172,7 +172,7 @@ npm run seed:run:relational
       ) {}
 
       createRandomUser() {
-        // Need for saving "this" context
+        // 需要保存 "this" 上下文
         return () => {
           return this.repositoryUser.create({
             firstName: faker.person.firstName(),
@@ -193,22 +193,22 @@ npm run seed:run:relational
     }
     ```
 
-1. Make changes in `src/database/seeds/relational/user/user-seed.service.ts`:
+1. 在 `src/database/seeds/relational/user/user-seed.service.ts` 中进行更改：
 
     ```ts
-    // Some code here...
+    // 这里有一些代码...
     import { UserFactory } from './user.factory';
     import { faker } from '@faker-js/faker';
 
     @Injectable()
     export class UserSeedService {
       constructor(
-        // Some code here...
+        // 这里有一些代码...
         private userFactory: UserFactory,
       ) {}
 
       async run() {
-        // Some code here...
+        // 这里有一些代码...
 
         await this.repository.save(
           faker.helpers.multiple(this.userFactory.createRandomUser(), {
@@ -219,7 +219,7 @@ npm run seed:run:relational
     }
     ```
 
-1. Make changes in `src/database/seeds/relational/user/user-seed.module.ts`:
+1. 在 `src/database/seeds/relational/user/user-seed.module.ts` 中进行更改：
 
     ```ts
     import { Module } from '@nestjs/common';
@@ -241,7 +241,7 @@ npm run seed:run:relational
 
     ```
 
-1. Run seed:
+1. 运行种子：
 
     ```bash
     npm run seed:run
@@ -249,16 +249,16 @@ npm run seed:run:relational
 
 ---
 
-## Seeding (Mongoose)
+## 数据填充 (Mongoose)
 
-### Creating seeds (Mongoose)
+### 创建种子 (Mongoose)
 
-1. Create seed file with `npm run seed:create:document -- --name Post`. Where `Post` is name of entity.
-1. Go to `src/database/seeds/document/post/post-seed.service.ts`.
-1. In `run` method extend your logic.
-1. Run [npm run seed:run:document](#run-seed-mongoose)
+1. 使用 `npm run seed:create:document -- --name Post` 创建种子文件。其中 `Post` 是实体的名称。
+1. 转到 `src/database/seeds/document/post/post-seed.service.ts`。
+1. 在 `run` 方法中扩展您的逻辑。
+1. 运行 [npm run seed:run:document] (#run-seed-mongoose)
 
-### Run seed (Mongoose)
+### 运行种子 (Mongoose)
 
 ```bash
 npm run seed:run:document
@@ -266,33 +266,33 @@ npm run seed:run:document
 
 ---
 
-## Performance optimization (PostgreSQL + TypeORM)
+## 性能优化 (PostgreSQL + TypeORM)
 
-### Indexes and Foreign Keys
+### 索引和外键
 
-Don't forget to create `indexes` on the Foreign Keys (FK) columns (if needed), because by default PostgreSQL [does not automatically add indexes to FK](https://stackoverflow.com/a/970605/18140714).
+不要忘记在外键（FK）列上创建 `索引`（如果需要），因为默认情况下 PostgreSQL [不会自动向 FK 添加索引](https://stackoverflow.com/a/970605/18140714)。
 
-### Max connections
+### 最大连接数
 
-Set the optimal number of [max connections](https://node-postgres.com/apis/pool) to database for your application in `/.env`:
+在 `/.env` 中为您的应用程序设置最优的数据库[最大连接数](https://node-postgres.com/apis/pool)：
 
 ```txt
 DATABASE_MAX_CONNECTIONS=100
 ```
 
-You can think of this parameter as how many concurrent database connections your application can handle.
+您可以将此参数视为应用程序可以处理的并发数据库连接数。
 
-## Performance optimization (MongoDB + Mongoose)
+## 性能优化 (MongoDB + Mongoose)
 
-### Design schema
+### 设计架构
 
-Designing schema for MongoDB is completely different from designing schema for relational databases. For best performance, you should design your schema according to:
+为 MongoDB 设计架构与为关系型数据库设计架构完全不同。为了获得最佳性能，您应该根据以下内容设计架构：
 
-1. [MongoDB Schema Design Anti-Patterns](https://www.mongodb.com/developer/products/mongodb/schema-design-anti-pattern-massive-arrays)
-1. [MongoDB Schema Design Best Practices](https://www.mongodb.com/developer/products/mongodb/mongodb-schema-design-best-practices/)
+1. [MongoDB 架构设计反模式](https://www.mongodb.com/developer/products/mongodb/schema-design-anti-pattern-massive-arrays)
+1. [MongoDB 架构设计最佳实践](https://www.mongodb.com/developer/products/mongodb/mongodb-schema-design-best-practices/)
 
 ---
 
-Previous: [Command Line Interface](cli.md)
+上一篇：[命令行界面] (cli.md)
 
-Next: [Auth](auth.md)
+下一篇：[认证] (auth.md)

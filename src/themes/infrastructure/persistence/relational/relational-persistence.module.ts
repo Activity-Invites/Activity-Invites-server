@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
-import { ThemeRepository } from '../theme.repository';
-import { RelationalThemeRepository } from './repositories/theme.repository';
+import { themesRepository } from '../themes.repository';
+import { themesRelationalRepository } from './repositories/themes.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ThemeEntity } from './entities/theme.entity';
+import { themesEntity } from './entities/themes.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ThemeEntity])],
+  imports: [TypeOrmModule.forFeature([themesEntity])],
   providers: [
     {
-      provide: ThemeRepository,
-      useClass: RelationalThemeRepository,
+      provide: themesRepository,
+      useClass: themesRelationalRepository,
     },
   ],
-  exports: [ThemeRepository],
+  exports: [themesRepository],
 })
-export class RelationalThemePersistenceModule {}
+export class RelationalthemesPersistenceModule {}

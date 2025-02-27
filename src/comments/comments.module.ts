@@ -1,18 +1,23 @@
 import { Module } from '@nestjs/common';
-import { CommentsService } from './comments.service';
-import { CommentsController } from './comments.controller';
-import { RelationalCommentPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
-import { DocumentCommentPersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
-import { ConfigService } from '@nestjs/config';
+import { commentsService } from './comments.service';
+import { commentsController } from './comments.controller';
+import { RelationalcommentsPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
+import databaseConfig from '../database/config/database.config';
+import { DatabaseConfig } from '../database/config/database-config.type';
+import { DocumentcommentsPersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
+
+const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
+  .isDocumentDatabase
+  ? DocumentcommentsPersistenceModule
+  : RelationalcommentsPersistenceModule;
 
 @Module({
   imports: [
-    process.env.DATABASE_TYPE === 'mongodb'
-      ? DocumentCommentPersistenceModule
-      : RelationalCommentPersistenceModule,
+    // import modules, etc.
+    infrastructurePersistenceModule,
   ],
-  controllers: [CommentsController],
-  providers: [CommentsService, ConfigService],
-  exports: [CommentsService],
+  controllers: [commentsController],
+  providers: [commentsService],
+  exports: [commentsService, infrastructurePersistenceModule],
 })
-export class CommentsModule {}
+export class commentsModule {}

@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
+import { ticketsRepository } from '../tickets.repository';
+import { ticketsRelationalRepository } from './repositories/tickets.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TicketRepository } from '../ticket.repository';
-import { TicketEntity } from './entities/ticket.entity';
-import { TicketsRelationalRepository } from './repositories/ticket.repository';
+import { ticketsEntity } from './entities/tickets.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TicketEntity])],
+  imports: [TypeOrmModule.forFeature([ticketsEntity])],
   providers: [
     {
-      provide: TicketRepository,
-      useClass: TicketsRelationalRepository,
+      provide: ticketsRepository,
+      useClass: ticketsRelationalRepository,
     },
   ],
-  exports: [TicketRepository],
+  exports: [ticketsRepository],
 })
-export class RelationalTicketPersistenceModule {}
+export class RelationalticketsPersistenceModule {}

@@ -1,28 +1,26 @@
+import { themesModule } from '../themes/themes.module';
 import { Module } from '@nestjs/common';
-import { ActivitiesService } from './activities.service';
-import { ActivitiesController } from './activities.controller';
-import { QRCodeService } from '../utils/qrcode.service';
-import { DatabaseConfig } from '@/database/config/database-config.type';
+import { activitiesService } from './activities.service';
+import { activitiesController } from './activities.controller';
+import { RelationalactivitiesPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
 import databaseConfig from '../database/config/database.config';
-import { DocumentActivityPersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
-import { RelationalActivityPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
+import { DatabaseConfig } from '../database/config/database-config.type';
+import { DocumentactivitiesPersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
 
-// <database-block>
 const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
   .isDocumentDatabase
-  ? DocumentActivityPersistenceModule
-  : RelationalActivityPersistenceModule;
-// </database-block>
+  ? DocumentactivitiesPersistenceModule
+  : RelationalactivitiesPersistenceModule;
 
 @Module({
   imports: [
-    infrastructurePersistenceModule
+    themesModule,
+
+    // import modules, etc.
+    infrastructurePersistenceModule,
   ],
-  controllers: [ActivitiesController],
-  providers: [
-    ActivitiesService,
-    QRCodeService,
-  ],
-  exports: [ActivitiesService],
+  controllers: [activitiesController],
+  providers: [activitiesService],
+  exports: [activitiesService, infrastructurePersistenceModule],
 })
-export class ActivitiesModule {}
+export class activitiesModule {}

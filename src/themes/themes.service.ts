@@ -1,60 +1,66 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ThemeRepository } from './infrastructure/persistence/theme.repository';
-import { CreateThemeDto } from './dto/create-theme.dto';
-import { UpdateThemeDto } from './dto/update-theme.dto';
-import { Theme } from './domain/theme';
-import { FilterThemeDto, SortThemeDto } from './dto/query-theme.dto';
-import { IPaginationOptions } from '@/utils/types/pagination-options';
+import { Injectable } from '@nestjs/common';
+import { CreatethemesDto } from './dto/create-themes.dto';
+import { UpdatethemesDto } from './dto/update-themes.dto';
+import { themesRepository } from './infrastructure/persistence/themes.repository';
+import { IPaginationOptions } from '../utils/types/pagination-options';
+import { themes } from './domain/themes';
 
 @Injectable()
-export class ThemesService {
-  constructor(private readonly themeRepository: ThemeRepository) {}
+export class themesService {
+  constructor(
+    // Dependencies here
+    private readonly themesRepository: themesRepository,
+  ) {}
 
-  async create(createThemeDto: CreateThemeDto): Promise<Theme> {
-    return this.themeRepository.create({
-      ...createThemeDto,
-      tags: createThemeDto.tags || [],
-      isDeleted: createThemeDto.isDeleted ?? false,
+  async create(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    createthemesDto: CreatethemesDto,
+  ) {
+    // Do not remove comment below.
+    // <creating-property />
+
+    return this.themesRepository.create({
+      // Do not remove comment below.
+      // <creating-property-payload />
     });
   }
 
-  async findAll(options: {
-    filterOptions?: FilterThemeDto;
-    sortOptions?: SortThemeDto[];
+  findAllWithPagination({
+    paginationOptions,
+  }: {
     paginationOptions: IPaginationOptions;
-  }): Promise<Theme[]> {
-    return this.themeRepository.findManyWithPagination(options);
+  }) {
+    return this.themesRepository.findAllWithPagination({
+      paginationOptions: {
+        page: paginationOptions.page,
+        limit: paginationOptions.limit,
+      },
+    });
   }
 
-  async findOne(id: string): Promise<Theme> {
-    const theme = await this.themeRepository.findById(id);
-    if (!theme) {
-      throw new NotFoundException(`Theme with ID "${id}" not found`);
-    }
-    return theme;
+  findById(id: themes['id']) {
+    return this.themesRepository.findById(id);
   }
 
-  async update(id: string, updateThemeDto: UpdateThemeDto): Promise<Theme> {
-    const updatedTheme = await this.themeRepository.update(id, updateThemeDto);
-    if (!updatedTheme) {
-      throw new NotFoundException(`Theme with ID "${id}" not found`);
-    }
-    return updatedTheme;
+  findByIds(ids: themes['id'][]) {
+    return this.themesRepository.findByIds(ids);
   }
 
-  async remove(id: string): Promise<void> {
-    const theme = await this.themeRepository.findById(id);
-    if (!theme) {
-      throw new NotFoundException(`Theme with ID "${id}" not found`);
-    }
-    await this.themeRepository.remove(id);
+  async update(
+    id: themes['id'],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    updatethemesDto: UpdatethemesDto,
+  ) {
+    // Do not remove comment below.
+    // <updating-property />
+
+    return this.themesRepository.update(id, {
+      // Do not remove comment below.
+      // <updating-property-payload />
+    });
   }
 
-  async findByName(name: string): Promise<Theme[]> {
-    return this.themeRepository.findByName(name);
-  }
-
-  async findByCategory(category: string): Promise<Theme[]> {
-    return this.themeRepository.findByCategory(category);
+  remove(id: themes['id']) {
+    return this.themesRepository.remove(id);
   }
 }

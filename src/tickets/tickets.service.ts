@@ -1,83 +1,66 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { TicketRepository } from './infrastructure/persistence/ticket.repository';
-import { CreateTicketDto } from './dto/create-ticket.dto';
-import { UpdateTicketDto } from './dto/update-ticket.dto';
-import { Ticket } from './domain/ticket';
-import { FilterTicketDto, SortTicketDto } from './dto/query-ticket.dto';
-import { IPaginationOptions } from '@/utils/types/pagination-options';
-import { TicketStatus } from './domain/ticket';
-import { IPaginationResponse } from '@/utils/types/pagination-response';
-import { DeepPartial } from '@/utils/types/deep-partial.type';
+import { Injectable } from '@nestjs/common';
+import { CreateticketsDto } from './dto/create-tickets.dto';
+import { UpdateticketsDto } from './dto/update-tickets.dto';
+import { ticketsRepository } from './infrastructure/persistence/tickets.repository';
+import { IPaginationOptions } from '../utils/types/pagination-options';
+import { tickets } from './domain/tickets';
 
 @Injectable()
-export class TicketsService {
-  constructor(private readonly ticketRepository: TicketRepository) {}
+export class ticketsService {
+  constructor(
+    // Dependencies here
+    private readonly ticketsRepository: ticketsRepository,
+  ) {}
 
-  async create(createTicketDto: CreateTicketDto): Promise<Ticket> {
-    const ticket: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'> = {
-      activity: { id: createTicketDto.activityId } as any, // 这里只需要ID，repository会处理关联
-      user: { id: createTicketDto.userId } as any, // 这里只需要ID，repository会处理关联
-      status: TicketStatus.PENDING,
-      isDeleted: false,
-    };
-    
-    return this.ticketRepository.create(ticket);
+  async create(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    createticketsDto: CreateticketsDto,
+  ) {
+    // Do not remove comment below.
+    // <creating-property />
+
+    return this.ticketsRepository.create({
+      // Do not remove comment below.
+      // <creating-property-payload />
+    });
   }
 
-  async findAll(options: {
-    filterOptions?: FilterTicketDto;
-    sortOptions?: SortTicketDto[];
+  findAllWithPagination({
+    paginationOptions,
+  }: {
     paginationOptions: IPaginationOptions;
-  }): Promise<IPaginationResponse<Ticket>> {
-    return this.ticketRepository.findManyWithPagination(options);
+  }) {
+    return this.ticketsRepository.findAllWithPagination({
+      paginationOptions: {
+        page: paginationOptions.page,
+        limit: paginationOptions.limit,
+      },
+    });
   }
 
-  async findOne(id: string): Promise<Ticket> {
-    const ticket = await this.ticketRepository.findById(id);
-    if (!ticket) {
-      throw new NotFoundException(`Ticket with ID "${id}" not found`);
-    }
-    return ticket;
+  findById(id: tickets['id']) {
+    return this.ticketsRepository.findById(id);
   }
 
-  async update(id: string, updateTicketDto: UpdateTicketDto): Promise<Ticket> {
-    const updateData: DeepPartial<Ticket> = {};
-    
-    if (updateTicketDto.activityId) {
-      updateData.activity = { id: updateTicketDto.activityId } as any;
-    }
-    
-    if (updateTicketDto.userId) {
-      updateData.user = { id: updateTicketDto.userId } as any;
-    }
-
-    const updatedTicket = await this.ticketRepository.update(id, updateData);
-    if (!updatedTicket) {
-      throw new NotFoundException(`Ticket with ID "${id}" not found`);
-    }
-    return updatedTicket;
+  findByIds(ids: tickets['id'][]) {
+    return this.ticketsRepository.findByIds(ids);
   }
 
-  async remove(id: string): Promise<void> {
-    const ticket = await this.ticketRepository.findById(id);
-    if (!ticket) {
-      throw new NotFoundException(`Ticket with ID "${id}" not found`);
-    }
-    await this.ticketRepository.remove(id);
+  async update(
+    id: tickets['id'],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    updateticketsDto: UpdateticketsDto,
+  ) {
+    // Do not remove comment below.
+    // <updating-property />
+
+    return this.ticketsRepository.update(id, {
+      // Do not remove comment below.
+      // <updating-property-payload />
+    });
   }
 
-  async findByActivityId(activityId: string): Promise<Ticket[]> {
-    return this.ticketRepository.findByActivityId(activityId);
-  }
-
-  async findByUserId(userId: string): Promise<Ticket[]> {
-    return this.ticketRepository.findByUserId(userId);
-  }
-
-  async findByActivityIdAndUserId(
-    activityId: string,
-    userId: string,
-  ): Promise<Ticket | null> {
-    return this.ticketRepository.findByActivityIdAndUserId(activityId, userId);
+  remove(id: tickets['id']) {
+    return this.ticketsRepository.remove(id);
   }
 }

@@ -1,21 +1,21 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { TicketRepository } from '../ticket.repository';
-import { TicketSchemaClass, TicketSchema } from './entities/ticket.schema';
-import { TicketsDocumentRepository } from './repositories/ticket.repository';
+import { ticketsSchema, ticketsSchemaClass } from './entities/tickets.schema';
+import { ticketsRepository } from '../tickets.repository';
+import { ticketsDocumentRepository } from './repositories/tickets.repository';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: TicketSchemaClass.name, schema: TicketSchema },
+      { name: ticketsSchemaClass.name, schema: ticketsSchema },
     ]),
   ],
   providers: [
     {
-      provide: TicketRepository,
-      useClass: TicketsDocumentRepository,
+      provide: ticketsRepository,
+      useClass: ticketsDocumentRepository,
     },
   ],
-  exports: [TicketRepository],
+  exports: [ticketsRepository],
 })
-export class DocumentTicketPersistenceModule {}
+export class DocumentticketsPersistenceModule {}

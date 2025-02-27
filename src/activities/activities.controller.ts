@@ -3,110 +3,109 @@ import {
   Get,
   Post,
   Body,
+  Patch,
   Param,
+  Delete,
   UseGuards,
   Query,
-  Patch,
-  HttpCode,
-  HttpStatus,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { ActivitiesService } from './activities.service';
-import { CreateActivityDto } from './dto/create-activity.dto';
-import { Activity, ActivityStatus } from './domain/activity';
-import { JwtAuthGuard } from '@/auth/guards/jwt-auth.guard';
-import { RolesGuard } from '@/roles/roles.guard';
-import { Roles } from '@/roles/roles.decorator';
-import { RoleEnum } from '@/roles/roles.enum';
-import { CurrentUser } from '@/auth/decorators/current-user.decorator';
-import { User } from '@/users/domain/user';
+import { activitiesService } from './activities.service';
+import { CreateactivitiesDto } from './dto/create-activities.dto';
+import { UpdateactivitiesDto } from './dto/update-activities.dto';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { activities } from './domain/activities';
+import { AuthGuard } from '@nestjs/passport';
+import {
+  InfinityPaginationResponse,
+  InfinityPaginationResponseDto,
+} from '../utils/dto/infinity-pagination-response.dto';
+import { infinityPagination } from '../utils/infinity-pagination';
+import { FindAllactivitiesDto } from './dto/find-all-activities.dto';
 
+@ApiTags('Activities')
 @ApiBearerAuth()
-@ApiTags('activities')
+@UseGuards(AuthGuard('jwt'))
 @Controller({
   path: 'activities',
   version: '1',
 })
-@UseGuards(JwtAuthGuard, RolesGuard)
-export class ActivitiesController {
-  constructor(private readonly activitiesService: ActivitiesService) {}
+export class activitiesController {
+  constructor(private readonly activitiesService: activitiesService) {}
 
   @Post()
-  @Roles(RoleEnum.Admin, RoleEnum.User)
-  @ApiOperation({ summary: 'Create a new activity' })
-  @ApiResponse({ status: 201, type: Activity })
-  @HttpCode(HttpStatus.CREATED)
-  create(
-    @Body() createActivityDto: CreateActivityDto,
-    @CurrentUser() user: User,
-  ): Promise<Activity> {
-    return this.activitiesService.create(createActivityDto, user);
+  @ApiCreatedResponse({
+    type: activities,
+  })
+  create(@Body() createactivitiesDto: CreateactivitiesDto) {
+    return this.activitiesService.create(createactivitiesDto);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all activities' })
-  @ApiResponse({ status: 200, type: [Activity] })
-  findAll(
-    @Query('isPublic') isPublic?: boolean,
-    @Query('status') status?: ActivityStatus,
-    @Query('creatorId') creatorId?: string,
-  ): Promise<Activity[]> {
-    return this.activitiesService.findAll({ isPublic, status, creatorId });
+  @ApiOkResponse({
+    type: InfinityPaginationResponse(activities),
+  })
+  async findAll(
+    @Query() query: FindAllactivitiesDto,
+  ): Promise<InfinityPaginationResponseDto<activities>> {
+    const page = query?.page ?? 1;
+    let limit = query?.limit ?? 10;
+    if (limit > 50) {
+      limit = 50;
+    }
+
+    return infinityPagination(
+      await this.activitiesService.findAllWithPagination({
+        paginationOptions: {
+          page,
+          limit,
+        },
+      }),
+      { page, limit },
+    );
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get activity by id' })
-  @ApiResponse({ status: 200, type: Activity })
-  findOne(@Param('id') id: string): Promise<Activity> {
-    return this.activitiesService.findOne(id);
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+  })
+  @ApiOkResponse({
+    type: activities,
+  })
+  findById(@Param('id') id: string) {
+    return this.activitiesService.findById(id);
   }
 
-  @Patch(':id/publish')
-  @Roles(RoleEnum.Admin, RoleEnum.User)
-  @ApiOperation({ summary: 'Publish activity' })
-  @ApiResponse({ status: 200, type: Activity })
-  publish(
+  @Patch(':id')
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+  })
+  @ApiOkResponse({
+    type: activities,
+  })
+  update(
     @Param('id') id: string,
-    @CurrentUser() user: User,
-  ): Promise<Activity> {
-    return this.activitiesService.publish(id, user);
+    @Body() updateactivitiesDto: UpdateactivitiesDto,
+  ) {
+    return this.activitiesService.update(id, updateactivitiesDto);
   }
 
-  @Post(':id/invite-qr')
-  @Roles(RoleEnum.Admin, RoleEnum.User)
-  @ApiOperation({ summary: 'Generate invite QR code' })
-  @ApiResponse({ status: 200, type: String })
-  generateInviteQRCode(
-    @Param('id') id: string,
-    @CurrentUser() user: User,
-  ): Promise<string> {
-    return this.activitiesService.generateInviteQRCode(id, user);
-  }
-
-  @Post(':id/join')
-  @Roles(RoleEnum.Admin, RoleEnum.User)
-  @ApiOperation({ summary: 'Join activity' })
-  @ApiResponse({ status: 200, type: Activity })
-  join(@Param('id') id: string, @CurrentUser() user: User): Promise<void> {
-    return this.activitiesService.join(id, user);
-  }
-
-  @Patch(':id/leave')
-  @Roles(RoleEnum.Admin, RoleEnum.User)
-  @ApiOperation({ summary: 'Leave activity' })
-  @ApiResponse({ status: 200, type: Activity })
-  leave(@Param('id') id: string, @CurrentUser() user: User): Promise<void> {
-    return this.activitiesService.leave(id, user);
-  }
-
-  @Patch(':id/cancel')
-  @Roles(RoleEnum.Admin, RoleEnum.User)
-  @ApiOperation({ summary: 'Cancel activity' })
-  @ApiResponse({ status: 200, type: Activity })
-  cancel(
-    @Param('id') id: string,
-    @CurrentUser() user: User,
-  ): Promise<void> {
-    return this.activitiesService.cancel(id, user);
+  @Delete(':id')
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+  })
+  remove(@Param('id') id: string) {
+    return this.activitiesService.remove(id);
   }
 }

@@ -1,18 +1,23 @@
 import { Module } from '@nestjs/common';
-import { ThemesService } from './themes.service';
-import { ThemesController } from './themes.controller';
-import { RelationalThemePersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
-import { DocumentPersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
-import { ConfigService } from '@nestjs/config';
+import { themesService } from './themes.service';
+import { themesController } from './themes.controller';
+import { RelationalthemesPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
+import databaseConfig from '../database/config/database.config';
+import { DatabaseConfig } from '../database/config/database-config.type';
+import { DocumentthemesPersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
+
+const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
+  .isDocumentDatabase
+  ? DocumentthemesPersistenceModule
+  : RelationalthemesPersistenceModule;
 
 @Module({
   imports: [
-    process.env.DATABASE_TYPE === 'mongodb'
-      ? DocumentPersistenceModule
-      : RelationalThemePersistenceModule,
+    // import modules, etc.
+    infrastructurePersistenceModule,
   ],
-  controllers: [ThemesController],
-  providers: [ThemesService, ConfigService],
-  exports: [ThemesService],
+  controllers: [themesController],
+  providers: [themesService],
+  exports: [themesService, infrastructurePersistenceModule],
 })
-export class ThemesModule {}
+export class themesModule {}

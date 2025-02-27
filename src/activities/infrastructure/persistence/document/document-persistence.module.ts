@@ -1,21 +1,24 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ActivityDocument, ActivitySchema } from './entities/activity.schema';
-import { DocumentActivityRepository } from './repositories/activity.repository';
-import { ActivityRepository } from '../activity.repository';
+import {
+  activitiesSchema,
+  activitiesSchemaClass,
+} from './entities/activities.schema';
+import { activitiesRepository } from '../activities.repository';
+import { activitiesDocumentRepository } from './repositories/activities.repository';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: ActivityDocument.name, schema: ActivitySchema },
+      { name: activitiesSchemaClass.name, schema: activitiesSchema },
     ]),
   ],
   providers: [
     {
-      provide: ActivityRepository,
-      useClass: DocumentActivityRepository,
+      provide: activitiesRepository,
+      useClass: activitiesDocumentRepository,
     },
   ],
-  exports: [ActivityRepository],
+  exports: [activitiesRepository],
 })
-export class DocumentActivityPersistenceModule {}
+export class DocumentactivitiesPersistenceModule {}
