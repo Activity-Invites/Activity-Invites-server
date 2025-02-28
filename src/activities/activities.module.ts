@@ -1,11 +1,13 @@
-import { themesModule } from '../themes/themes.module';
+import { ThemesModule } from '../themes/themes.module';
 import { Module } from '@nestjs/common';
-import { activitiesService } from './activities.service';
-import { activitiesController } from './activities.controller';
+import { ActivitiesService } from './activities.service';
+import { ActivitiesController } from './activities.controller';
 import { RelationalactivitiesPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
 import databaseConfig from '../database/config/database.config';
 import { DatabaseConfig } from '../database/config/database-config.type';
 import { DocumentactivitiesPersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
+import { TicketsModule } from '@/tickets/tickets.module';
+import { CommentsModule } from '@/comments/comments.module';
 
 const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
   .isDocumentDatabase
@@ -14,13 +16,15 @@ const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
 
 @Module({
   imports: [
-    themesModule,
-
+    ThemesModule, 
+    ActivitiesModule,
+    TicketsModule,
+    CommentsModule,
     // import modules, etc.
     infrastructurePersistenceModule,
   ],
-  controllers: [activitiesController],
-  providers: [activitiesService],
-  exports: [activitiesService, infrastructurePersistenceModule],
+  controllers: [ActivitiesController],
+  providers: [ActivitiesService],
+  exports: [ActivitiesService, infrastructurePersistenceModule],
 })
-export class activitiesModule {}
+export class ActivitiesModule {}

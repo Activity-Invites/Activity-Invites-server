@@ -47,20 +47,9 @@ const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
     });
 // </database-block>
 
-import { commentsModule } from './comments/comments.module';
-
-import { ticketsModule } from './tickets/tickets.module';
-
-import { activitiesModule } from './activities/activities.module';
-
-import { themesModule } from './themes/themes.module';
-
 @Module({
   imports: [
-    themesModule,
-    activitiesModule,
-    ticketsModule,
-    commentsModule,
+
     ConfigModule.forRoot({
       isGlobal: true,
       load: [
@@ -127,6 +116,10 @@ import { themesModule } from './themes/themes.module';
 
     // 7. 展示层
     HomeModule,
+    ThemesModule,
+    ActivitiesModule,
+    TicketsModule,
+    CommentsModule,
   ],
 })
 export class AppModule {}

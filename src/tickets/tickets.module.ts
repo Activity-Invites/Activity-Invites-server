@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ticketsService } from './tickets.service';
-import { ticketsController } from './tickets.controller';
+import { TicketsService } from './tickets.service';
+import { TicketsController } from './tickets.controller';
 import { RelationalticketsPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
 import databaseConfig from '../database/config/database.config';
 import { DatabaseConfig } from '../database/config/database-config.type';
@@ -16,8 +16,8 @@ const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
     // import modules, etc.
     infrastructurePersistenceModule,
   ],
-  controllers: [ticketsController],
-  providers: [ticketsService],
-  exports: [ticketsService, infrastructurePersistenceModule],
+  controllers: [TicketsController],
+  providers: [TicketsService],
+  exports: [TicketsService, infrastructurePersistenceModule],
 })
-export class ticketsModule {}
+export class TicketsModule {}

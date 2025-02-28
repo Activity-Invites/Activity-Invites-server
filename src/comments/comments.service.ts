@@ -6,7 +6,7 @@ import { IPaginationOptions } from '../utils/types/pagination-options';
 import { comments } from './domain/comments';
 
 @Injectable()
-export class commentsService {
+export class CommentsService {
   constructor(
     // Dependencies here
     private readonly commentsRepository: commentsRepository,

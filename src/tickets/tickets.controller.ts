@@ -9,7 +9,7 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
-import { ticketsService } from './tickets.service';
+import { TicketsService } from './tickets.service';
 import { CreateticketsDto } from './dto/create-tickets.dto';
 import { UpdateticketsDto } from './dto/update-tickets.dto';
 import {
@@ -35,8 +35,8 @@ import { FindAllticketsDto } from './dto/find-all-tickets.dto';
   path: 'tickets',
   version: '1',
 })
-export class ticketsController {
-  constructor(private readonly ticketsService: ticketsService) {}
+export class TicketsController {
+  constructor(private readonly ticketsService: TicketsService) {}
 
   @Post()
   @ApiCreatedResponse({

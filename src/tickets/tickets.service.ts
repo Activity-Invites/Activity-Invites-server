@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateticketsDto } from './dto/create-tickets.dto';
 import { UpdateticketsDto } from './dto/update-tickets.dto';
-import { ticketsRepository } from './infrastructure/persistence/tickets.repository';
+import { TicketsRepository } from './infrastructure/persistence/tickets.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { tickets } from './domain/tickets';
 
 @Injectable()
-export class ticketsService {
+export class TicketsService {
   constructor(
     // Dependencies here
-    private readonly ticketsRepository: ticketsRepository,
+    private readonly ticketsRepository: TicketsRepository,
   ) {}
 
   async create(

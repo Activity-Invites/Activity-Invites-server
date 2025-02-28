@@ -6,7 +6,7 @@ import { IPaginationOptions } from '../utils/types/pagination-options';
 import { themes } from './domain/themes';
 
 @Injectable()
-export class themesService {
+export class ThemesService {
   constructor(
     // Dependencies here
     private readonly themesRepository: themesRepository,

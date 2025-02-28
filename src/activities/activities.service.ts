@@ -1,4 +1,4 @@
-import { themesService } from '../themes/themes.service';
+import { ThemesService } from '../themes/themes.service';
 import { themes } from '../themes/domain/themes';
 
 import { HttpStatus, UnprocessableEntityException } from '@nestjs/common';
@@ -11,9 +11,9 @@ import { IPaginationOptions } from '../utils/types/pagination-options';
 import { activities } from './domain/activities';
 
 @Injectable()
-export class activitiesService {
+export class ActivitiesService {
   constructor(
-    private readonly themesService: themesService,
+    private readonly themesService: ThemesService,
 
     // Dependencies here
     private readonly activitiesRepository: activitiesRepository,

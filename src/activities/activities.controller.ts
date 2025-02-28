@@ -9,7 +9,7 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
-import { activitiesService } from './activities.service';
+import { ActivitiesService } from './activities.service';
 import { CreateactivitiesDto } from './dto/create-activities.dto';
 import { UpdateactivitiesDto } from './dto/update-activities.dto';
 import {
@@ -35,8 +35,8 @@ import { FindAllactivitiesDto } from './dto/find-all-activities.dto';
   path: 'activities',
   version: '1',
 })
-export class activitiesController {
-  constructor(private readonly activitiesService: activitiesService) {}
+export class ActivitiesController {
+  constructor(private readonly activitiesService: ActivitiesService) {}
 
   @Post()
   @ApiCreatedResponse({

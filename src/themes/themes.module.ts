@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { themesService } from './themes.service';
-import { themesController } from './themes.controller';
+import { ThemesService } from './themes.service';
+import { ThemesController } from './themes.controller';
 import { RelationalthemesPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
 import databaseConfig from '../database/config/database.config';
 import { DatabaseConfig } from '../database/config/database-config.type';
@@ -16,8 +16,8 @@ const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
     // import modules, etc.
     infrastructurePersistenceModule,
   ],
-  controllers: [themesController],
-  providers: [themesService],
-  exports: [themesService, infrastructurePersistenceModule],
+  controllers: [ThemesController],
+  providers: [ThemesService],
+  exports: [ThemesService, infrastructurePersistenceModule],
 })
-export class themesModule {}
+export class ThemesModule {}

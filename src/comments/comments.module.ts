@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { commentsService } from './comments.service';
-import { commentsController } from './comments.controller';
+import { CommentsService } from './comments.service';
+import { CommentsController } from './comments.controller';
 import { RelationalcommentsPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
 import databaseConfig from '../database/config/database.config';
 import { DatabaseConfig } from '../database/config/database-config.type';
@@ -16,8 +16,8 @@ const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
     // import modules, etc.
     infrastructurePersistenceModule,
   ],
-  controllers: [commentsController],
-  providers: [commentsService],
-  exports: [commentsService, infrastructurePersistenceModule],
+  controllers: [CommentsController],
+  providers: [CommentsService],
+  exports: [CommentsService, infrastructurePersistenceModule],
 })
-export class commentsModule {}
+export class CommentsModule {}

@@ -9,7 +9,7 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
-import { themesService } from './themes.service';
+import { ThemesService } from './themes.service';
 import { CreatethemesDto } from './dto/create-themes.dto';
 import { UpdatethemesDto } from './dto/update-themes.dto';
 import {
@@ -35,8 +35,8 @@ import { FindAllthemesDto } from './dto/find-all-themes.dto';
   path: 'themes',
   version: '1',
 })
-export class themesController {
-  constructor(private readonly themesService: themesService) {}
+export class ThemesController {
+  constructor(private readonly themesService: ThemesService) {}
 
   @Post()
   @ApiCreatedResponse({

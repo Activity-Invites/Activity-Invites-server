@@ -3,7 +3,7 @@ import { NullableType } from '../../../utils/types/nullable.type';
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
 import { tickets } from '../../domain/tickets';
 
-export abstract class ticketsRepository {
+export abstract class TicketsRepository {
   abstract create(
     data: Omit<tickets, 'id' | 'createdAt' | 'updatedAt'>,
   ): Promise<tickets>;

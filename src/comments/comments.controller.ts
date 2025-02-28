@@ -9,7 +9,7 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
-import { commentsService } from './comments.service';
+import { CommentsService } from './comments.service';
 import { CreatecommentsDto } from './dto/create-comments.dto';
 import { UpdatecommentsDto } from './dto/update-comments.dto';
 import {
@@ -35,8 +35,8 @@ import { FindAllcommentsDto } from './dto/find-all-comments.dto';
   path: 'comments',
   version: '1',
 })
-export class commentsController {
-  constructor(private readonly commentsService: commentsService) {}
+export class CommentsController {
+  constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
   @ApiCreatedResponse({
