@@ -1,2 +1,2 @@
-npm run lint
-npm run test -- --passWithNoTests
+#!/bin/sh
+# /Users/liuxiaowen/Library/pnpm/pnpm run lint

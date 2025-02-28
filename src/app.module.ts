@@ -27,6 +27,11 @@ import { MailerModule } from './mailer/mailer.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongooseConfigService } from './database/mongoose-config.service';
 import { DatabaseConfig } from './database/config/database-config.type';
+import { LoggerModule } from './shared/logger/logger.module';
+import { ActivitiesModule } from './activities/activities.module';
+import { CommentsModule } from './comments/comments.module';
+import { ThemesModule } from './themes/themes.module';
+import { TicketsModule } from './tickets/tickets.module';
 
 // <database-block>
 const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
@@ -70,7 +75,11 @@ import { themesModule } from './themes/themes.module';
       ],
       envFilePath: ['.env'],
     }),
+    // 2. 基础设施
+    // 数据库配置
     infrastructureDatabaseModule,
+    // 国际化配置
+    // 配置语言文件路径和回退语言
     I18nModule.forRootAsync({
       useFactory: (configService: ConfigService<AllConfigType>) => ({
         fallbackLanguage: configService.getOrThrow('app.fallbackLanguage', {
@@ -94,15 +103,29 @@ import { themesModule } from './themes/themes.module';
       imports: [ConfigModule],
       inject: [ConfigService],
     }),
+    // 3. 核心业务
     UsersModule,
-    FilesModule,
     AuthModule,
+
+    // 4. 会话管理（依赖认证）
+    SessionModule,
+
+    // 5. 第三方认证（依赖核心认证）
     AuthFacebookModule,
     AuthGoogleModule,
     AuthAppleModule,
-    SessionModule,
+
+    // 6. 功能模块
+    FilesModule,
     MailModule,
     MailerModule,
+    LoggerModule,
+    ActivitiesModule,
+    CommentsModule,
+    TicketsModule,
+    ThemesModule,
+
+    // 7. 展示层
     HomeModule,
   ],
 })
