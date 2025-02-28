@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class themes {
+export class Themes {
   @ApiProperty({
     type: String,
   })

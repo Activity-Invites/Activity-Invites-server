@@ -10,8 +10,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { ActivitiesService } from './activities.service';
-import { CreateactivitiesDto } from './dto/create-activities.dto';
-import { UpdateactivitiesDto } from './dto/update-activities.dto';
+import { CreateActivitiesDto } from './dto/create-activities.dto';
+import { UpdateActivitiesDto } from './dto/update-activities.dto';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -19,14 +19,14 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { activities } from './domain/activities';
+import { Activities } from './domain/activities';
 import { AuthGuard } from '@nestjs/passport';
 import {
   InfinityPaginationResponse,
   InfinityPaginationResponseDto,
 } from '../utils/dto/infinity-pagination-response.dto';
 import { infinityPagination } from '../utils/infinity-pagination';
-import { FindAllactivitiesDto } from './dto/find-all-activities.dto';
+import { FindAllActivitiesDto } from './dto/find-all-activities.dto';
 
 @ApiTags('Activities')
 @ApiBearerAuth()
@@ -40,19 +40,19 @@ export class ActivitiesController {
 
   @Post()
   @ApiCreatedResponse({
-    type: activities,
+    type: Activities,
   })
-  create(@Body() createactivitiesDto: CreateactivitiesDto) {
-    return this.activitiesService.create(createactivitiesDto);
+  create(@Body() createActivitiesDto: CreateActivitiesDto) {
+    return this.activitiesService.create(createActivitiesDto);
   }
 
   @Get()
   @ApiOkResponse({
-    type: InfinityPaginationResponse(activities),
+    type: InfinityPaginationResponse(Activities),
   })
   async findAll(
-    @Query() query: FindAllactivitiesDto,
-  ): Promise<InfinityPaginationResponseDto<activities>> {
+    @Query() query: FindAllActivitiesDto,
+  ): Promise<InfinityPaginationResponseDto<Activities>> {
     const page = query?.page ?? 1;
     let limit = query?.limit ?? 10;
     if (limit > 50) {
@@ -77,7 +77,7 @@ export class ActivitiesController {
     required: true,
   })
   @ApiOkResponse({
-    type: activities,
+    type: Activities,
   })
   findById(@Param('id') id: string) {
     return this.activitiesService.findById(id);
@@ -90,13 +90,13 @@ export class ActivitiesController {
     required: true,
   })
   @ApiOkResponse({
-    type: activities,
+    type: Activities,
   })
   update(
     @Param('id') id: string,
-    @Body() updateactivitiesDto: UpdateactivitiesDto,
+    @Body() updateActivitiesDto: UpdateActivitiesDto,
   ) {
-    return this.activitiesService.update(id, updateactivitiesDto);
+    return this.activitiesService.update(id, updateActivitiesDto);
   }
 
   @Delete(':id')

@@ -2,20 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { NullableType } from '../../../../../utils/types/nullable.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { themesSchemaClass } from '../entities/themes.schema';
-import { themesRepository } from '../../themes.repository';
-import { themes } from '../../../../domain/themes';
+import { ThemesSchemaClass } from '../entities/themes.schema';
+import { ThemesRepository } from '../../themes.repository';
+import { Themes } from '../../../../domain/themes';
 import { themesMapper } from '../mappers/themes.mapper';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
 
 @Injectable()
-export class themesDocumentRepository implements themesRepository {
+export class ThemesDocumentRepository implements ThemesRepository {
   constructor(
-    @InjectModel(themesSchemaClass.name)
-    private readonly themesModel: Model<themesSchemaClass>,
+    @InjectModel(ThemesSchemaClass.name)
+    private readonly themesModel: Model<ThemesSchemaClass>,
   ) {}
 
-  async create(data: themes): Promise<themes> {
+  async create(data: Themes): Promise<Themes> {
     const persistenceModel = themesMapper.toPersistence(data);
     const createdEntity = new this.themesModel(persistenceModel);
     const entityObject = await createdEntity.save();
@@ -26,7 +26,7 @@ export class themesDocumentRepository implements themesRepository {
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;
-  }): Promise<themes[]> {
+    }): Promise<Themes[]> {
     const entityObjects = await this.themesModel
       .find()
       .skip((paginationOptions.page - 1) * paginationOptions.limit)
@@ -37,12 +37,12 @@ export class themesDocumentRepository implements themesRepository {
     );
   }
 
-  async findById(id: themes['id']): Promise<NullableType<themes>> {
+  async findById(id: Themes['id']): Promise<NullableType<Themes>> {
     const entityObject = await this.themesModel.findById(id);
     return entityObject ? themesMapper.toDomain(entityObject) : null;
   }
 
-  async findByIds(ids: themes['id'][]): Promise<themes[]> {
+  async findByIds(ids: Themes['id'][]): Promise<Themes[]> {
     const entityObjects = await this.themesModel.find({ _id: { $in: ids } });
     return entityObjects.map((entityObject) =>
       themesMapper.toDomain(entityObject),
@@ -50,9 +50,9 @@ export class themesDocumentRepository implements themesRepository {
   }
 
   async update(
-    id: themes['id'],
-    payload: Partial<themes>,
-  ): Promise<NullableType<themes>> {
+    id: Themes['id'],
+    payload: Partial<Themes>,
+  ): Promise<NullableType<Themes>> {
     const clonedPayload = { ...payload };
     delete clonedPayload.id;
 
@@ -75,7 +75,7 @@ export class themesDocumentRepository implements themesRepository {
     return entityObject ? themesMapper.toDomain(entityObject) : null;
   }
 
-  async remove(id: themes['id']): Promise<void> {
+  async remove(id: Themes['id']): Promise<void> {
     await this.themesModel.deleteOne({ _id: id });
   }
 }

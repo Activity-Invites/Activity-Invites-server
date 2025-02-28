@@ -2,57 +2,57 @@ import { Injectable } from '@nestjs/common';
 import { NullableType } from '../../../../../utils/types/nullable.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ticketsSchemaClass } from '../entities/tickets.schema';
-import { ticketsRepository } from '../../tickets.repository';
-import { tickets } from '../../../../domain/tickets';
-import { ticketsMapper } from '../mappers/tickets.mapper';
+import { TicketsSchemaClass } from '../entities/tickets.schema';
+import { TicketsRepository } from '../../tickets.repository';
+import { Tickets } from '../../../../domain/tickets';
+import { TicketsMapper } from '../mappers/tickets.mapper';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
 
 @Injectable()
-export class ticketsDocumentRepository implements ticketsRepository {
+export class TicketsDocumentRepository implements TicketsRepository {
   constructor(
-    @InjectModel(ticketsSchemaClass.name)
-    private readonly ticketsModel: Model<ticketsSchemaClass>,
+    @InjectModel(TicketsSchemaClass.name)
+    private readonly ticketsModel: Model<TicketsSchemaClass>,
   ) {}
 
-  async create(data: tickets): Promise<tickets> {
-    const persistenceModel = ticketsMapper.toPersistence(data);
+  async create(data: Tickets): Promise<Tickets> {
+    const persistenceModel = TicketsMapper.toPersistence(data);
     const createdEntity = new this.ticketsModel(persistenceModel);
     const entityObject = await createdEntity.save();
-    return ticketsMapper.toDomain(entityObject);
+    return TicketsMapper.toDomain(entityObject);
   }
 
   async findAllWithPagination({
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;
-  }): Promise<tickets[]> {
+  }): Promise<Tickets[]> {
     const entityObjects = await this.ticketsModel
       .find()
       .skip((paginationOptions.page - 1) * paginationOptions.limit)
       .limit(paginationOptions.limit);
 
     return entityObjects.map((entityObject) =>
-      ticketsMapper.toDomain(entityObject),
+      TicketsMapper.toDomain(entityObject),
     );
   }
 
-  async findById(id: tickets['id']): Promise<NullableType<tickets>> {
+  async findById(id: Tickets['id']): Promise<NullableType<Tickets>> {
     const entityObject = await this.ticketsModel.findById(id);
-    return entityObject ? ticketsMapper.toDomain(entityObject) : null;
+    return entityObject ? TicketsMapper.toDomain(entityObject) : null;
   }
 
-  async findByIds(ids: tickets['id'][]): Promise<tickets[]> {
+  async findByIds(ids: Tickets['id'][]): Promise<Tickets[]> {
     const entityObjects = await this.ticketsModel.find({ _id: { $in: ids } });
     return entityObjects.map((entityObject) =>
-      ticketsMapper.toDomain(entityObject),
+      TicketsMapper.toDomain(entityObject),
     );
   }
 
   async update(
-    id: tickets['id'],
-    payload: Partial<tickets>,
-  ): Promise<NullableType<tickets>> {
+    id: Tickets['id'],
+    payload: Partial<Tickets>,
+  ): Promise<NullableType<Tickets>> {
     const clonedPayload = { ...payload };
     delete clonedPayload.id;
 
@@ -65,17 +65,17 @@ export class ticketsDocumentRepository implements ticketsRepository {
 
     const entityObject = await this.ticketsModel.findOneAndUpdate(
       filter,
-      ticketsMapper.toPersistence({
-        ...ticketsMapper.toDomain(entity),
+      TicketsMapper.toPersistence({
+        ...TicketsMapper.toDomain(entity),
         ...clonedPayload,
       }),
       { new: true },
     );
 
-    return entityObject ? ticketsMapper.toDomain(entityObject) : null;
+    return entityObject ? TicketsMapper.toDomain(entityObject) : null;
   }
 
-  async remove(id: tickets['id']): Promise<void> {
+  async remove(id: Tickets['id']): Promise<void> {
     await this.ticketsModel.deleteOne({ _id: id });
   }
 }

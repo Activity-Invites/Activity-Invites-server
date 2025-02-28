@@ -1,10 +1,10 @@
-import { themesSchemaClass } from '../../../../../themes/infrastructure/persistence/document/entities/themes.schema';
+import { ThemesSchemaClass } from '../../../../../themes/infrastructure/persistence/document/entities/themes.schema';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { now, HydratedDocument } from 'mongoose';
 import { EntityDocumentHelper } from '../../../../../utils/document-entity-helper';
 
-export type activitiesSchemaDocument = HydratedDocument<activitiesSchemaClass>;
+export type ActivitiesSchemaDocument = HydratedDocument<ActivitiesSchemaClass>;
 
 @Schema({
   timestamps: true,
@@ -13,11 +13,11 @@ export type activitiesSchemaDocument = HydratedDocument<activitiesSchemaClass>;
     getters: true,
   },
 })
-export class activitiesSchemaClass extends EntityDocumentHelper {
+export class ActivitiesSchemaClass extends EntityDocumentHelper {
   @Prop({
-    type: themesSchemaClass,
+    type: ThemesSchemaClass,
   })
-  themeId: themesSchemaClass;
+  themeId: ThemesSchemaClass;
 
   @Prop({ default: now })
   createdAt: Date;
@@ -26,6 +26,6 @@ export class activitiesSchemaClass extends EntityDocumentHelper {
   updatedAt: Date;
 }
 
-export const activitiesSchema = SchemaFactory.createForClass(
-  activitiesSchemaClass,
+export const ActivitiesSchema = SchemaFactory.createForClass(
+  ActivitiesSchemaClass,
 );

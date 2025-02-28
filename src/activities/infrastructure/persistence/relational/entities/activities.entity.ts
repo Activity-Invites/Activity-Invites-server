@@ -1,4 +1,4 @@
-import { themesEntity } from '../../../../../themes/infrastructure/persistence/relational/entities/themes.entity';
+import { ThemesEntity } from '../../../../../themes/infrastructure/persistence/relational/entities/themes.entity';
 
 import {
   CreateDateColumn,
@@ -12,12 +12,12 @@ import { EntityRelationalHelper } from '../../../../../utils/relational-entity-h
 @Entity({
   name: 'activities',
 })
-export class activitiesEntity extends EntityRelationalHelper {
+export class ActivitiesEntity extends EntityRelationalHelper {
   @Column({
     nullable: false,
     type: 'jsonb',
   })
-  themeId: themesEntity;
+  themeId: ThemesEntity;
 
   @PrimaryGeneratedColumn('uuid')
   id: string;

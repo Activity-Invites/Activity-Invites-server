@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateticketsDto } from './dto/create-tickets.dto';
-import { UpdateticketsDto } from './dto/update-tickets.dto';
+import { CreateTicketsDto } from './dto/create-tickets.dto';
+import { UpdateTicketsDto } from './dto/update-tickets.dto';
 import { TicketsRepository } from './infrastructure/persistence/tickets.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
-import { tickets } from './domain/tickets';
+import { Tickets } from './domain/tickets';
 
 @Injectable()
 export class TicketsService {
@@ -14,7 +14,7 @@ export class TicketsService {
 
   async create(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    createticketsDto: CreateticketsDto,
+    createTicketsDto: CreateTicketsDto,
   ) {
     // Do not remove comment below.
     // <creating-property />
@@ -38,18 +38,18 @@ export class TicketsService {
     });
   }
 
-  findById(id: tickets['id']) {
+  findById(id: Tickets['id']) {
     return this.ticketsRepository.findById(id);
   }
 
-  findByIds(ids: tickets['id'][]) {
+  findByIds(ids: Tickets['id'][]) {
     return this.ticketsRepository.findByIds(ids);
   }
 
   async update(
-    id: tickets['id'],
+    id: Tickets['id'],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    updateticketsDto: UpdateticketsDto,
+    updateTicketsDto: UpdateTicketsDto,
   ) {
     // Do not remove comment below.
     // <updating-property />
@@ -60,7 +60,7 @@ export class TicketsService {
     });
   }
 
-  remove(id: tickets['id']) {
+  remove(id: Tickets['id']) {
     return this.ticketsRepository.remove(id);
   }
 }

@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { now, HydratedDocument } from 'mongoose';
 import { EntityDocumentHelper } from '../../../../../utils/document-entity-helper';
 
-export type themesSchemaDocument = HydratedDocument<themesSchemaClass>;
+export type ThemesSchemaDocument = HydratedDocument<ThemesSchemaClass>;
 
 @Schema({
   timestamps: true,
@@ -11,7 +11,7 @@ export type themesSchemaDocument = HydratedDocument<themesSchemaClass>;
     getters: true,
   },
 })
-export class themesSchemaClass extends EntityDocumentHelper {
+export class ThemesSchemaClass extends EntityDocumentHelper {
   @Prop({ default: now })
   createdAt: Date;
 
@@ -19,4 +19,4 @@ export class themesSchemaClass extends EntityDocumentHelper {
   updatedAt: Date;
 }
 
-export const themesSchema = SchemaFactory.createForClass(themesSchemaClass);
+export const ThemesSchema = SchemaFactory.createForClass(ThemesSchemaClass);

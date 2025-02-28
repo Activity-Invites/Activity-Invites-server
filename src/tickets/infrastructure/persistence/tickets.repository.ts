@@ -1,27 +1,27 @@
 import { DeepPartial } from '../../../utils/types/deep-partial.type';
 import { NullableType } from '../../../utils/types/nullable.type';
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
-import { tickets } from '../../domain/tickets';
+import { Tickets } from '../../domain/tickets';
 
 export abstract class TicketsRepository {
   abstract create(
-    data: Omit<tickets, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<tickets>;
+    data: Omit<Tickets, 'id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<Tickets>;
 
   abstract findAllWithPagination({
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;
-  }): Promise<tickets[]>;
+    }): Promise<Tickets[]>;
 
-  abstract findById(id: tickets['id']): Promise<NullableType<tickets>>;
+  abstract findById(id: Tickets['id']): Promise<NullableType<Tickets>>;
 
-  abstract findByIds(ids: tickets['id'][]): Promise<tickets[]>;
+  abstract findByIds(ids: Tickets['id'][]): Promise<Tickets[]>;
 
   abstract update(
-    id: tickets['id'],
-    payload: DeepPartial<tickets>,
-  ): Promise<tickets | null>;
+    id: Tickets['id'],
+    payload: DeepPartial<Tickets>,
+  ): Promise<Tickets | null>;
 
-  abstract remove(id: tickets['id']): Promise<void>;
+  abstract remove(id: Tickets['id']): Promise<void>;
 }

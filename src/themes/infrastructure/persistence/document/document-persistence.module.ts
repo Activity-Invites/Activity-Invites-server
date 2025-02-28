@@ -1,21 +1,21 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { themesSchema, themesSchemaClass } from './entities/themes.schema';
-import { themesRepository } from '../themes.repository';
-import { themesDocumentRepository } from './repositories/themes.repository';
+import { ThemesSchema, ThemesSchemaClass } from './entities/themes.schema';
+import { ThemesRepository } from '../themes.repository';
+import { ThemesDocumentRepository } from './repositories/themes.repository';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: themesSchemaClass.name, schema: themesSchema },
+      { name: ThemesSchemaClass.name, schema: ThemesSchema },
     ]),
   ],
   providers: [
     {
-      provide: themesRepository,
-      useClass: themesDocumentRepository,
+      provide: ThemesRepository,
+      useClass: ThemesDocumentRepository,
     },
   ],
-  exports: [themesRepository],
+  exports: [ThemesRepository],
 })
-export class DocumentthemesPersistenceModule {}
+export class DocumentThemesPersistenceModule {}

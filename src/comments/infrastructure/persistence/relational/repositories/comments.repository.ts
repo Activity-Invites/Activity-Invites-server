@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
-import { commentsEntity } from '../entities/comments.entity';
+import { CommentsEntity } from '../entities/comments.entity';
 import { NullableType } from '../../../../../utils/types/nullable.type';
-import { comments } from '../../../../domain/comments';
-import { commentsRepository } from '../../comments.repository';
+import { Comments } from '../../../../domain/comments';
+import { CommentsRepository } from '../../comments.repository';
 import { commentsMapper } from '../mappers/comments.mapper';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
 
 @Injectable()
-export class commentsRelationalRepository implements commentsRepository {
+export class CommentsRelationalRepository implements CommentsRepository {
   constructor(
-    @InjectRepository(commentsEntity)
-    private readonly commentsRepository: Repository<commentsEntity>,
+    @InjectRepository(CommentsEntity)
+    private readonly commentsRepository: Repository<CommentsEntity>,
   ) {}
 
-  async create(data: comments): Promise<comments> {
+  async create(data: Comments): Promise<Comments> {
     const persistenceModel = commentsMapper.toPersistence(data);
     const newEntity = await this.commentsRepository.save(
       this.commentsRepository.create(persistenceModel),
@@ -27,7 +27,7 @@ export class commentsRelationalRepository implements commentsRepository {
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;
-  }): Promise<comments[]> {
+  }): Promise<Comments[]> {
     const entities = await this.commentsRepository.find({
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,
@@ -36,7 +36,7 @@ export class commentsRelationalRepository implements commentsRepository {
     return entities.map((entity) => commentsMapper.toDomain(entity));
   }
 
-  async findById(id: comments['id']): Promise<NullableType<comments>> {
+  async findById(id: Comments['id']): Promise<NullableType<Comments>> {
     const entity = await this.commentsRepository.findOne({
       where: { id },
     });
@@ -44,7 +44,7 @@ export class commentsRelationalRepository implements commentsRepository {
     return entity ? commentsMapper.toDomain(entity) : null;
   }
 
-  async findByIds(ids: comments['id'][]): Promise<comments[]> {
+  async findByIds(ids: Comments['id'][]): Promise<Comments[]> {
     const entities = await this.commentsRepository.find({
       where: { id: In(ids) },
     });
@@ -53,9 +53,9 @@ export class commentsRelationalRepository implements commentsRepository {
   }
 
   async update(
-    id: comments['id'],
-    payload: Partial<comments>,
-  ): Promise<comments> {
+    id: Comments['id'],
+    payload: Partial<Comments>,
+  ): Promise<Comments> {
     const entity = await this.commentsRepository.findOne({
       where: { id },
     });
@@ -76,7 +76,7 @@ export class commentsRelationalRepository implements commentsRepository {
     return commentsMapper.toDomain(updatedEntity);
   }
 
-  async remove(id: comments['id']): Promise<void> {
+  async remove(id: Comments['id']): Promise<void> {
     await this.commentsRepository.delete(id);
   }
 }

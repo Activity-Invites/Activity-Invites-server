@@ -1,27 +1,27 @@
 import { DeepPartial } from '../../../utils/types/deep-partial.type';
 import { NullableType } from '../../../utils/types/nullable.type';
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
-import { activities } from '../../domain/activities';
+import { Activities } from '../../domain/activities';
 
-export abstract class activitiesRepository {
+export abstract class ActivitiesRepository {
   abstract create(
-    data: Omit<activities, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<activities>;
+    data: Omit<Activities, 'id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<Activities>;
 
   abstract findAllWithPagination({
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;
-  }): Promise<activities[]>;
+  }): Promise<Activities[]>;
 
-  abstract findById(id: activities['id']): Promise<NullableType<activities>>;
+  abstract findById(id: Activities['id']): Promise<NullableType<Activities>>;
 
-  abstract findByIds(ids: activities['id'][]): Promise<activities[]>;
+  abstract findByIds(ids: Activities['id'][]): Promise<Activities[]>;
 
   abstract update(
-    id: activities['id'],
-    payload: DeepPartial<activities>,
-  ): Promise<activities | null>;
+    id: Activities['id'],
+    payload: DeepPartial<Activities>,
+  ): Promise<Activities | null>;
 
-  abstract remove(id: activities['id']): Promise<void>;
+  abstract remove(id: Activities['id']): Promise<void>;
 }

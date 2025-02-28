@@ -2,59 +2,59 @@ import { Injectable } from '@nestjs/common';
 import { NullableType } from '../../../../../utils/types/nullable.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { activitiesSchemaClass } from '../entities/activities.schema';
-import { activitiesRepository } from '../../activities.repository';
-import { activities } from '../../../../domain/activities';
-import { activitiesMapper } from '../mappers/activities.mapper';
+import { ActivitiesSchemaClass } from '../entities/activities.schema';
+import { ActivitiesRepository } from '../../activities.repository';
+import { Activities } from '@/activities/domain/activities';
+import { ActivitiesMapper } from '../mappers/activities.mapper';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
 
 @Injectable()
-export class activitiesDocumentRepository implements activitiesRepository {
+export class ActivitiesDocumentRepository implements ActivitiesRepository {
   constructor(
-    @InjectModel(activitiesSchemaClass.name)
-    private readonly activitiesModel: Model<activitiesSchemaClass>,
+    @InjectModel(ActivitiesSchemaClass.name)
+    private readonly activitiesModel: Model<ActivitiesSchemaClass>,
   ) {}
 
-  async create(data: activities): Promise<activities> {
-    const persistenceModel = activitiesMapper.toPersistence(data);
+  async create(data: Activities): Promise<Activities> {
+    const persistenceModel = ActivitiesMapper.toPersistence(data);
     const createdEntity = new this.activitiesModel(persistenceModel);
     const entityObject = await createdEntity.save();
-    return activitiesMapper.toDomain(entityObject);
+    return ActivitiesMapper.toDomain(entityObject);
   }
 
   async findAllWithPagination({
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;
-  }): Promise<activities[]> {
+    }): Promise<Activities[]> {
     const entityObjects = await this.activitiesModel
       .find()
       .skip((paginationOptions.page - 1) * paginationOptions.limit)
       .limit(paginationOptions.limit);
 
     return entityObjects.map((entityObject) =>
-      activitiesMapper.toDomain(entityObject),
+      ActivitiesMapper.toDomain(entityObject),
     );
   }
 
-  async findById(id: activities['id']): Promise<NullableType<activities>> {
+  async findById(id: Activities['id']): Promise<NullableType<Activities>> {
     const entityObject = await this.activitiesModel.findById(id);
-    return entityObject ? activitiesMapper.toDomain(entityObject) : null;
+    return entityObject ? ActivitiesMapper.toDomain(entityObject) : null;
   }
 
-  async findByIds(ids: activities['id'][]): Promise<activities[]> {
+  async findByIds(ids: Activities['id'][]): Promise<Activities[]> {
     const entityObjects = await this.activitiesModel.find({
       _id: { $in: ids },
     });
     return entityObjects.map((entityObject) =>
-      activitiesMapper.toDomain(entityObject),
+      ActivitiesMapper.toDomain(entityObject),
     );
   }
 
   async update(
-    id: activities['id'],
-    payload: Partial<activities>,
-  ): Promise<NullableType<activities>> {
+    id: Activities['id'],
+    payload: Partial<Activities>,
+  ): Promise<NullableType<Activities>> {
     const clonedPayload = { ...payload };
     delete clonedPayload.id;
 
@@ -67,17 +67,17 @@ export class activitiesDocumentRepository implements activitiesRepository {
 
     const entityObject = await this.activitiesModel.findOneAndUpdate(
       filter,
-      activitiesMapper.toPersistence({
-        ...activitiesMapper.toDomain(entity),
+      ActivitiesMapper.toPersistence({
+        ...ActivitiesMapper.toDomain(entity),
         ...clonedPayload,
       }),
       { new: true },
     );
 
-    return entityObject ? activitiesMapper.toDomain(entityObject) : null;
+    return entityObject ? ActivitiesMapper.toDomain(entityObject) : null;
   }
 
-  async remove(id: activities['id']): Promise<void> {
+  async remove(id: Activities['id']): Promise<void> {
     await this.activitiesModel.deleteOne({ _id: id });
   }
 }

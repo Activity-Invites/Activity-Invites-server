@@ -1,4 +1,4 @@
-import { themesDto } from '../../themes/dto/themes.dto';
+import { ThemesDto } from '../../themes/dto/themes.dto';
 
 import {
   // decorators here
@@ -17,15 +17,15 @@ import {
   ApiProperty,
 } from '@nestjs/swagger';
 
-export class CreateactivitiesDto {
+export class CreateActivitiesDto {
   @ApiProperty({
     required: true,
-    type: () => themesDto,
+    type: () => ThemesDto,
   })
   @ValidateNested()
-  @Type(() => themesDto)
+  @Type(() => ThemesDto)
   @IsNotEmptyObject()
-  themeId: themesDto;
+  themeId: ThemesDto;
 
   // Don't forget to use the class-validator decorators in the DTO properties.
 }

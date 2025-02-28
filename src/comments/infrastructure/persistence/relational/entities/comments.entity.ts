@@ -9,7 +9,7 @@ import { EntityRelationalHelper } from '../../../../../utils/relational-entity-h
 @Entity({
   name: 'comments',
 })
-export class commentsEntity extends EntityRelationalHelper {
+export class CommentsEntity extends EntityRelationalHelper {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

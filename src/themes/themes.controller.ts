@@ -19,7 +19,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { themes } from './domain/themes';
+import { Themes } from './domain/themes';
 import { AuthGuard } from '@nestjs/passport';
 import {
   InfinityPaginationResponse,
@@ -40,7 +40,7 @@ export class ThemesController {
 
   @Post()
   @ApiCreatedResponse({
-    type: themes,
+    type: Themes,
   })
   create(@Body() createthemesDto: CreatethemesDto) {
     return this.themesService.create(createthemesDto);
@@ -48,11 +48,11 @@ export class ThemesController {
 
   @Get()
   @ApiOkResponse({
-    type: InfinityPaginationResponse(themes),
+    type: InfinityPaginationResponse(Themes),
   })
   async findAll(
     @Query() query: FindAllthemesDto,
-  ): Promise<InfinityPaginationResponseDto<themes>> {
+  ): Promise<InfinityPaginationResponseDto<Themes>> {
     const page = query?.page ?? 1;
     let limit = query?.limit ?? 10;
     if (limit > 50) {
@@ -77,7 +77,7 @@ export class ThemesController {
     required: true,
   })
   @ApiOkResponse({
-    type: themes,
+    type: Themes,
   })
   findById(@Param('id') id: string) {
     return this.themesService.findById(id);
@@ -90,7 +90,7 @@ export class ThemesController {
     required: true,
   })
   @ApiOkResponse({
-    type: themes,
+    type: Themes,
   })
   update(@Param('id') id: string, @Body() updatethemesDto: UpdatethemesDto) {
     return this.themesService.update(id, updatethemesDto);

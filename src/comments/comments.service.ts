@@ -1,20 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { CreatecommentsDto } from './dto/create-comments.dto';
-import { UpdatecommentsDto } from './dto/update-comments.dto';
-import { commentsRepository } from './infrastructure/persistence/comments.repository';
+import { CreateCommentsDto } from './dto/create-comments.dto';
+import { UpdateCommentsDto } from './dto/update-comments.dto';
+import { CommentsRepository } from './infrastructure/persistence/comments.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
-import { comments } from './domain/comments';
+import { Comments } from './domain/comments';
 
 @Injectable()
 export class CommentsService {
   constructor(
     // Dependencies here
-    private readonly commentsRepository: commentsRepository,
+    private readonly commentsRepository: CommentsRepository,
   ) {}
 
   async create(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    createcommentsDto: CreatecommentsDto,
+    createCommentsDto: CreateCommentsDto,
   ) {
     // Do not remove comment below.
     // <creating-property />
@@ -38,18 +38,18 @@ export class CommentsService {
     });
   }
 
-  findById(id: comments['id']) {
+  findById(id: Comments['id']) {
     return this.commentsRepository.findById(id);
   }
 
-  findByIds(ids: comments['id'][]) {
+  findByIds(ids: Comments['id'][]) {
     return this.commentsRepository.findByIds(ids);
   }
 
   async update(
-    id: comments['id'],
+    id: Comments['id'],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    updatecommentsDto: UpdatecommentsDto,
+    updateCommentsDto: UpdateCommentsDto,
   ) {
     // Do not remove comment below.
     // <updating-property />
@@ -60,7 +60,7 @@ export class CommentsService {
     });
   }
 
-  remove(id: comments['id']) {
+  remove(id: Comments['id']) {
     return this.commentsRepository.remove(id);
   }
 }

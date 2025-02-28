@@ -1,14 +1,14 @@
 import { ThemesService } from '../themes/themes.service';
-import { themes } from '../themes/domain/themes';
+import { Themes } from '../themes/domain/themes';
 
 import { HttpStatus, UnprocessableEntityException } from '@nestjs/common';
 
 import { Injectable } from '@nestjs/common';
-import { CreateactivitiesDto } from './dto/create-activities.dto';
-import { UpdateactivitiesDto } from './dto/update-activities.dto';
-import { activitiesRepository } from './infrastructure/persistence/activities.repository';
+import { CreateActivitiesDto } from './dto/create-activities.dto';
+import { UpdateActivitiesDto } from './dto/update-activities.dto';
+import { ActivitiesRepository } from './infrastructure/persistence/activities.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
-import { activities } from './domain/activities';
+import { Activities } from './domain/activities';
 
 @Injectable()
 export class ActivitiesService {
@@ -16,10 +16,10 @@ export class ActivitiesService {
     private readonly themesService: ThemesService,
 
     // Dependencies here
-    private readonly activitiesRepository: activitiesRepository,
+    private readonly activitiesRepository: ActivitiesRepository,
   ) {}
 
-  async create(createactivitiesDto: CreateactivitiesDto) {
+  async create(createactivitiesDto: CreateActivitiesDto) {
     // Do not remove comment below.
     // <creating-property />
     const themeIdObject = await this.themesService.findById(
@@ -55,22 +55,22 @@ export class ActivitiesService {
     });
   }
 
-  findById(id: activities['id']) {
+  findById(id: Activities['id']) {
     return this.activitiesRepository.findById(id);
   }
 
-  findByIds(ids: activities['id'][]) {
+  findByIds(ids: Activities['id'][]) {
     return this.activitiesRepository.findByIds(ids);
   }
 
   async update(
-    id: activities['id'],
+    id: Activities['id'],
 
-    updateactivitiesDto: UpdateactivitiesDto,
+    updateactivitiesDto: UpdateActivitiesDto,
   ) {
     // Do not remove comment below.
     // <updating-property />
-    let themeId: themes | undefined = undefined;
+    let themeId: Themes | undefined = undefined;
 
     if (updateactivitiesDto.themeId) {
       const themeIdObject = await this.themesService.findById(
@@ -94,7 +94,7 @@ export class ActivitiesService {
     });
   }
 
-  remove(id: activities['id']) {
+  remove(id: Activities['id']) {
     return this.activitiesRepository.remove(id);
   }
 }

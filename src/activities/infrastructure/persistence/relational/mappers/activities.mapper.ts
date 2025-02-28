@@ -1,11 +1,11 @@
-import { activities } from '../../../../domain/activities';
+import { Activities } from '../../../../domain/activities';
 import { themesMapper } from '../../../../../themes/infrastructure/persistence/relational/mappers/themes.mapper';
 
-import { activitiesEntity } from '../entities/activities.entity';
+import { ActivitiesEntity } from '../entities/activities.entity';
 
 export class activitiesMapper {
-  static toDomain(raw: activitiesEntity): activities {
-    const domainEntity = new activities();
+  static toDomain(raw: ActivitiesEntity): Activities {
+    const domainEntity = new Activities();
     if (raw.themeId) {
       domainEntity.themeId = themesMapper.toDomain(raw.themeId);
     }
@@ -17,8 +17,8 @@ export class activitiesMapper {
     return domainEntity;
   }
 
-  static toPersistence(domainEntity: activities): activitiesEntity {
-    const persistenceEntity = new activitiesEntity();
+  static toPersistence(domainEntity: Activities): ActivitiesEntity {
+    const persistenceEntity = new ActivitiesEntity();
     if (domainEntity.themeId) {
       persistenceEntity.themeId = themesMapper.toPersistence(
         domainEntity.themeId,

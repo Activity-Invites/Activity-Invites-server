@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class comments {
+export class Comments {
   @ApiProperty({
     type: String,
   })

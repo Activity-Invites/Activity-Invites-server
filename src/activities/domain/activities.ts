@@ -1,12 +1,12 @@
-import { themes } from '../../themes/domain/themes';
+import { Themes } from '../../themes/domain/themes';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class activities {
+export class Activities {
   @ApiProperty({
-    type: () => themes,
+    type: () => Themes,
     nullable: false,
   })
-  themeId: themes;
+  themeId: Themes;
 
   @ApiProperty({
     type: String,

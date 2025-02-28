@@ -1,27 +1,27 @@
 import { DeepPartial } from '../../../utils/types/deep-partial.type';
 import { NullableType } from '../../../utils/types/nullable.type';
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
-import { comments } from '../../domain/comments';
+import { Comments } from '../../domain/comments';
 
-export abstract class commentsRepository {
+export abstract class CommentsRepository {
   abstract create(
-    data: Omit<comments, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<comments>;
+    data: Omit<Comments, 'id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<Comments>;
 
   abstract findAllWithPagination({
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;
-  }): Promise<comments[]>;
+  }): Promise<Comments[]>;
 
-  abstract findById(id: comments['id']): Promise<NullableType<comments>>;
+  abstract findById(id: Comments['id']): Promise<NullableType<Comments>>;
 
-  abstract findByIds(ids: comments['id'][]): Promise<comments[]>;
+  abstract findByIds(ids: Comments['id'][]): Promise<Comments[]>;
 
   abstract update(
-    id: comments['id'],
-    payload: DeepPartial<comments>,
-  ): Promise<comments | null>;
+    id: Comments['id'],
+    payload: DeepPartial<Comments>,
+  ): Promise<Comments | null>;
 
-  abstract remove(id: comments['id']): Promise<void>;
+  abstract remove(id: Comments['id']): Promise<void>;
 }

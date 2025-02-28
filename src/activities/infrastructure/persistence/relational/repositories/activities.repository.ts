@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
-import { activitiesEntity } from '../entities/activities.entity';
+import { ActivitiesEntity } from '../entities/activities.entity';
 import { NullableType } from '../../../../../utils/types/nullable.type';
-import { activities } from '../../../../domain/activities';
-import { activitiesRepository } from '../../activities.repository';
+import { Activities } from '../../../../domain/activities';
+import { ActivitiesRepository } from '../../activities.repository';
 import { activitiesMapper } from '../mappers/activities.mapper';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
 
 @Injectable()
-export class activitiesRelationalRepository implements activitiesRepository {
+export class activitiesRelationalRepository implements ActivitiesRepository {
   constructor(
-    @InjectRepository(activitiesEntity)
-    private readonly activitiesRepository: Repository<activitiesEntity>,
+    @InjectRepository(ActivitiesEntity)
+    private readonly activitiesRepository: Repository<ActivitiesEntity>,
   ) {}
 
-  async create(data: activities): Promise<activities> {
+  async create(data: Activities): Promise<Activities> {
     const persistenceModel = activitiesMapper.toPersistence(data);
     const newEntity = await this.activitiesRepository.save(
       this.activitiesRepository.create(persistenceModel),
@@ -27,7 +27,7 @@ export class activitiesRelationalRepository implements activitiesRepository {
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;
-  }): Promise<activities[]> {
+    }): Promise<Activities[]> {
     const entities = await this.activitiesRepository.find({
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,
@@ -36,7 +36,7 @@ export class activitiesRelationalRepository implements activitiesRepository {
     return entities.map((entity) => activitiesMapper.toDomain(entity));
   }
 
-  async findById(id: activities['id']): Promise<NullableType<activities>> {
+  async findById(id: Activities['id']): Promise<NullableType<Activities>> {
     const entity = await this.activitiesRepository.findOne({
       where: { id },
     });
@@ -44,7 +44,7 @@ export class activitiesRelationalRepository implements activitiesRepository {
     return entity ? activitiesMapper.toDomain(entity) : null;
   }
 
-  async findByIds(ids: activities['id'][]): Promise<activities[]> {
+  async findByIds(ids: Activities['id'][]): Promise<Activities[]> {
     const entities = await this.activitiesRepository.find({
       where: { id: In(ids) },
     });
@@ -53,9 +53,9 @@ export class activitiesRelationalRepository implements activitiesRepository {
   }
 
   async update(
-    id: activities['id'],
-    payload: Partial<activities>,
-  ): Promise<activities> {
+    id: Activities['id'],
+    payload: Partial<Activities>,
+  ): Promise<Activities> {
     const entity = await this.activitiesRepository.findOne({
       where: { id },
     });
@@ -76,7 +76,7 @@ export class activitiesRelationalRepository implements activitiesRepository {
     return activitiesMapper.toDomain(updatedEntity);
   }
 
-  async remove(id: activities['id']): Promise<void> {
+  async remove(id: Activities['id']): Promise<void> {
     await this.activitiesRepository.delete(id);
   }
 }

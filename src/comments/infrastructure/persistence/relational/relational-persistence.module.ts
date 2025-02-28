@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
-import { commentsRepository } from '../comments.repository';
-import { commentsRelationalRepository } from './repositories/comments.repository';
+import { CommentsRepository } from '../comments.repository';
+import { CommentsRelationalRepository } from './repositories/comments.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { commentsEntity } from './entities/comments.entity';
+import { CommentsEntity } from './entities/comments.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([commentsEntity])],
+  imports: [TypeOrmModule.forFeature([CommentsEntity])],
   providers: [
     {
-      provide: commentsRepository,
-      useClass: commentsRelationalRepository,
+      provide: CommentsRepository,
+      useClass: CommentsRelationalRepository,
     },
   ],
-  exports: [commentsRepository],
+  exports: [CommentsRepository],
 })
-export class RelationalcommentsPersistenceModule {}
+export class RelationalCommentsPersistenceModule {}

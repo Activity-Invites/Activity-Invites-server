@@ -1,9 +1,9 @@
-import { themes } from '../../../../domain/themes';
-import { themesSchemaClass } from '../entities/themes.schema';
+import { Themes } from '../../../../domain/themes';
+import { ThemesSchemaClass } from '../entities/themes.schema';
 
 export class themesMapper {
-  public static toDomain(raw: themesSchemaClass): themes {
-    const domainEntity = new themes();
+  public static toDomain(raw: ThemesSchemaClass): Themes {
+    const domainEntity = new Themes();
     domainEntity.id = raw._id.toString();
     domainEntity.createdAt = raw.createdAt;
     domainEntity.updatedAt = raw.updatedAt;
@@ -11,8 +11,8 @@ export class themesMapper {
     return domainEntity;
   }
 
-  public static toPersistence(domainEntity: themes): themesSchemaClass {
-    const persistenceSchema = new themesSchemaClass();
+  public static toPersistence(domainEntity: Themes): ThemesSchemaClass {
+    const persistenceSchema = new ThemesSchemaClass();
     if (domainEntity.id) {
       persistenceSchema._id = domainEntity.id;
     }

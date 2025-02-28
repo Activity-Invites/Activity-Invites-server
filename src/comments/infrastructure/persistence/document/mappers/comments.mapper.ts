@@ -1,9 +1,9 @@
-import { comments } from '../../../../domain/comments';
-import { commentsSchemaClass } from '../entities/comments.schema';
+import { Comments } from '../../../../domain/comments';
+import { CommentsSchemaClass } from '../entities/comments.schema';
 
-export class commentsMapper {
-  public static toDomain(raw: commentsSchemaClass): comments {
-    const domainEntity = new comments();
+export class CommentsMapper {
+  public static toDomain(raw: CommentsSchemaClass): Comments {
+    const domainEntity = new Comments();
     domainEntity.id = raw._id.toString();
     domainEntity.createdAt = raw.createdAt;
     domainEntity.updatedAt = raw.updatedAt;
@@ -11,8 +11,8 @@ export class commentsMapper {
     return domainEntity;
   }
 
-  public static toPersistence(domainEntity: comments): commentsSchemaClass {
-    const persistenceSchema = new commentsSchemaClass();
+  public static toPersistence(domainEntity: Comments): CommentsSchemaClass {
+    const persistenceSchema = new CommentsSchemaClass();
     if (domainEntity.id) {
       persistenceSchema._id = domainEntity.id;
     }

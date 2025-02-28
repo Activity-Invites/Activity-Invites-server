@@ -1,27 +1,27 @@
 import { DeepPartial } from '../../../utils/types/deep-partial.type';
 import { NullableType } from '../../../utils/types/nullable.type';
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
-import { themes } from '../../domain/themes';
+import { Themes } from '../../domain/themes';
 
-export abstract class themesRepository {
+export abstract class ThemesRepository {
   abstract create(
-    data: Omit<themes, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<themes>;
+    data: Omit<Themes, 'id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<Themes>;
 
   abstract findAllWithPagination({
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;
-  }): Promise<themes[]>;
+    }): Promise<Themes[]>;
 
-  abstract findById(id: themes['id']): Promise<NullableType<themes>>;
+  abstract findById(id: Themes['id']): Promise<NullableType<Themes>>;
 
-  abstract findByIds(ids: themes['id'][]): Promise<themes[]>;
+  abstract findByIds(ids: Themes['id'][]): Promise<Themes[]>;
 
   abstract update(
-    id: themes['id'],
-    payload: DeepPartial<themes>,
-  ): Promise<themes | null>;
+    id: Themes['id'],
+    payload: DeepPartial<Themes>,
+  ): Promise<Themes | null>;
 
-  abstract remove(id: themes['id']): Promise<void>;
+  abstract remove(id: Themes['id']): Promise<void>;
 }

@@ -10,8 +10,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
-import { CreateticketsDto } from './dto/create-tickets.dto';
-import { UpdateticketsDto } from './dto/update-tickets.dto';
+import { CreateTicketsDto } from './dto/create-tickets.dto';
+import { UpdateTicketsDto } from './dto/update-tickets.dto';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -19,14 +19,14 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { tickets } from './domain/tickets';
+import { Tickets } from './domain/tickets';
 import { AuthGuard } from '@nestjs/passport';
 import {
   InfinityPaginationResponse,
   InfinityPaginationResponseDto,
 } from '../utils/dto/infinity-pagination-response.dto';
 import { infinityPagination } from '../utils/infinity-pagination';
-import { FindAllticketsDto } from './dto/find-all-tickets.dto';
+import { FindAllTicketsDto } from './dto/find-all-tickets.dto';
 
 @ApiTags('Tickets')
 @ApiBearerAuth()
@@ -40,19 +40,19 @@ export class TicketsController {
 
   @Post()
   @ApiCreatedResponse({
-    type: tickets,
+    type: Tickets,
   })
-  create(@Body() createticketsDto: CreateticketsDto) {
-    return this.ticketsService.create(createticketsDto);
+  create(@Body() createTicketsDto: CreateTicketsDto) {
+    return this.ticketsService.create(createTicketsDto);
   }
 
   @Get()
   @ApiOkResponse({
-    type: InfinityPaginationResponse(tickets),
+    type: InfinityPaginationResponse(Tickets),
   })
   async findAll(
-    @Query() query: FindAllticketsDto,
-  ): Promise<InfinityPaginationResponseDto<tickets>> {
+    @Query() query: FindAllTicketsDto,
+  ): Promise<InfinityPaginationResponseDto<Tickets>> {
     const page = query?.page ?? 1;
     let limit = query?.limit ?? 10;
     if (limit > 50) {
@@ -77,7 +77,7 @@ export class TicketsController {
     required: true,
   })
   @ApiOkResponse({
-    type: tickets,
+    type: Tickets,
   })
   findById(@Param('id') id: string) {
     return this.ticketsService.findById(id);
@@ -90,10 +90,10 @@ export class TicketsController {
     required: true,
   })
   @ApiOkResponse({
-    type: tickets,
+    type: Tickets,
   })
-  update(@Param('id') id: string, @Body() updateticketsDto: UpdateticketsDto) {
-    return this.ticketsService.update(id, updateticketsDto);
+  update(@Param('id') id: string, @Body() updateTicketsDto: UpdateTicketsDto) {
+    return this.ticketsService.update(id, updateTicketsDto);
   }
 
   @Delete(':id')

@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreatethemesDto } from './dto/create-themes.dto';
 import { UpdatethemesDto } from './dto/update-themes.dto';
-import { themesRepository } from './infrastructure/persistence/themes.repository';
+import { ThemesRepository } from './infrastructure/persistence/themes.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
-import { themes } from './domain/themes';
+import { Themes } from './domain/themes';
 
 @Injectable()
 export class ThemesService {
   constructor(
     // Dependencies here
-    private readonly themesRepository: themesRepository,
+    private readonly themesRepository: ThemesRepository,
   ) {}
 
   async create(
@@ -38,16 +38,16 @@ export class ThemesService {
     });
   }
 
-  findById(id: themes['id']) {
+  findById(id: Themes['id']) {
     return this.themesRepository.findById(id);
   }
 
-  findByIds(ids: themes['id'][]) {
+  findByIds(ids: Themes['id'][]) {
     return this.themesRepository.findByIds(ids);
   }
 
   async update(
-    id: themes['id'],
+    id: Themes['id'],
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     updatethemesDto: UpdatethemesDto,
   ) {
@@ -60,7 +60,7 @@ export class ThemesService {
     });
   }
 
-  remove(id: themes['id']) {
+  remove(id: Themes['id']) {
     return this.themesRepository.remove(id);
   }
 }

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class themesDto {
+export class ThemesDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

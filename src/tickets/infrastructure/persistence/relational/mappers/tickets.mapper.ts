@@ -1,9 +1,9 @@
-import { tickets } from '../../../../domain/tickets';
-import { ticketsEntity } from '../entities/tickets.entity';
+import { Tickets } from '../../../../domain/tickets';
+import { TicketsEntity } from '../entities/tickets.entity';
 
-export class ticketsMapper {
-  static toDomain(raw: ticketsEntity): tickets {
-    const domainEntity = new tickets();
+export class TicketsMapper {
+  static toDomain(raw: TicketsEntity): Tickets {
+    const domainEntity = new Tickets();
     domainEntity.id = raw.id;
     domainEntity.createdAt = raw.createdAt;
     domainEntity.updatedAt = raw.updatedAt;
@@ -11,8 +11,8 @@ export class ticketsMapper {
     return domainEntity;
   }
 
-  static toPersistence(domainEntity: tickets): ticketsEntity {
-    const persistenceEntity = new ticketsEntity();
+  static toPersistence(domainEntity: Tickets): TicketsEntity {
+    const persistenceEntity = new TicketsEntity();
     if (domainEntity.id) {
       persistenceEntity.id = domainEntity.id;
     }

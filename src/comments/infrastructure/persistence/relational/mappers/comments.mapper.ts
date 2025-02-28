@@ -1,9 +1,9 @@
-import { comments } from '../../../../domain/comments';
-import { commentsEntity } from '../entities/comments.entity';
+import { Comments } from '../../../../domain/comments';
+import { CommentsEntity } from '../entities/comments.entity';
 
 export class commentsMapper {
-  static toDomain(raw: commentsEntity): comments {
-    const domainEntity = new comments();
+  static toDomain(raw: CommentsEntity): Comments {
+    const domainEntity = new Comments();
     domainEntity.id = raw.id;
     domainEntity.createdAt = raw.createdAt;
     domainEntity.updatedAt = raw.updatedAt;
@@ -11,8 +11,8 @@ export class commentsMapper {
     return domainEntity;
   }
 
-  static toPersistence(domainEntity: comments): commentsEntity {
-    const persistenceEntity = new commentsEntity();
+  static toPersistence(domainEntity: Comments): CommentsEntity {
+    const persistenceEntity = new CommentsEntity();
     if (domainEntity.id) {
       persistenceEntity.id = domainEntity.id;
     }

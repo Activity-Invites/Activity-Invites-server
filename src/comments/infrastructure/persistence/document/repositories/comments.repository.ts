@@ -2,57 +2,57 @@ import { Injectable } from '@nestjs/common';
 import { NullableType } from '../../../../../utils/types/nullable.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { commentsSchemaClass } from '../entities/comments.schema';
-import { commentsRepository } from '../../comments.repository';
-import { comments } from '../../../../domain/comments';
-import { commentsMapper } from '../mappers/comments.mapper';
+import { CommentsSchemaClass } from '../entities/comments.schema';
+import { CommentsRepository } from '../../comments.repository';
+import { Comments } from '../../../../domain/comments';
+import { CommentsMapper } from '../mappers/comments.mapper';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
 
 @Injectable()
-export class commentsDocumentRepository implements commentsRepository {
+export class CommentsDocumentRepository implements CommentsRepository {
   constructor(
-    @InjectModel(commentsSchemaClass.name)
-    private readonly commentsModel: Model<commentsSchemaClass>,
+    @InjectModel(CommentsSchemaClass.name)
+    private readonly commentsModel: Model<CommentsSchemaClass>,
   ) {}
 
-  async create(data: comments): Promise<comments> {
-    const persistenceModel = commentsMapper.toPersistence(data);
+  async create(data: Comments): Promise<Comments> {
+    const persistenceModel = CommentsMapper.toPersistence(data);
     const createdEntity = new this.commentsModel(persistenceModel);
     const entityObject = await createdEntity.save();
-    return commentsMapper.toDomain(entityObject);
+    return CommentsMapper.toDomain(entityObject);
   }
 
   async findAllWithPagination({
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;
-  }): Promise<comments[]> {
+    }): Promise<Comments[]> {
     const entityObjects = await this.commentsModel
       .find()
       .skip((paginationOptions.page - 1) * paginationOptions.limit)
       .limit(paginationOptions.limit);
 
     return entityObjects.map((entityObject) =>
-      commentsMapper.toDomain(entityObject),
+      CommentsMapper.toDomain(entityObject),
     );
   }
 
-  async findById(id: comments['id']): Promise<NullableType<comments>> {
+  async findById(id: Comments['id']): Promise<NullableType<Comments>> {
     const entityObject = await this.commentsModel.findById(id);
-    return entityObject ? commentsMapper.toDomain(entityObject) : null;
+    return entityObject ? CommentsMapper.toDomain(entityObject) : null;
   }
 
-  async findByIds(ids: comments['id'][]): Promise<comments[]> {
+  async findByIds(ids: Comments['id'][]): Promise<Comments[]> {
     const entityObjects = await this.commentsModel.find({ _id: { $in: ids } });
     return entityObjects.map((entityObject) =>
-      commentsMapper.toDomain(entityObject),
+      CommentsMapper.toDomain(entityObject),
     );
   }
 
   async update(
-    id: comments['id'],
-    payload: Partial<comments>,
-  ): Promise<NullableType<comments>> {
+    id: Comments['id'],
+    payload: Partial<Comments>,
+  ): Promise<NullableType<Comments>> {
     const clonedPayload = { ...payload };
     delete clonedPayload.id;
 
@@ -65,17 +65,17 @@ export class commentsDocumentRepository implements commentsRepository {
 
     const entityObject = await this.commentsModel.findOneAndUpdate(
       filter,
-      commentsMapper.toPersistence({
-        ...commentsMapper.toDomain(entity),
+      CommentsMapper.toPersistence({
+        ...CommentsMapper.toDomain(entity),
         ...clonedPayload,
       }),
       { new: true },
     );
 
-    return entityObject ? commentsMapper.toDomain(entityObject) : null;
+    return entityObject ? CommentsMapper.toDomain(entityObject) : null;
   }
 
-  async remove(id: comments['id']): Promise<void> {
+  async remove(id: Comments['id']): Promise<void> {
     await this.commentsModel.deleteOne({ _id: id });
   }
 }
