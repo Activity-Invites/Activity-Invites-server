@@ -49,8 +49,11 @@ const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
 
 import { PaymentsModule } from './payments/payments.module';
 
+import { LocationsModule } from './locations/locations.module';
+
 @Module({
   imports: [
+    LocationsModule,
     PaymentsModule,
 
     ConfigModule.forRoot({

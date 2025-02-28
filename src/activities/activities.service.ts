@@ -1,3 +1,11 @@
+
+
+
+
+
+
+
+
 import { ThemesService } from '../themes/themes.service';
 import { Themes } from '../themes/domain/themes';
 
@@ -13,17 +21,25 @@ import { Activities } from './domain/activities';
 @Injectable()
 export class ActivitiesService {
   constructor(
+
+
+
+
     private readonly themesService: ThemesService,
 
     // Dependencies here
     private readonly activitiesRepository: ActivitiesRepository,
-  ) {}
+  ) { }
 
-  async create(createactivitiesDto: CreateActivitiesDto) {
+  async create(createActivitiesDto: CreateActivitiesDto) {
     // Do not remove comment below.
     // <creating-property />
+
+
+
+
     const themeIdObject = await this.themesService.findById(
-      createactivitiesDto.themeId.id,
+      createActivitiesDto.themeId.id,
     );
     if (!themeIdObject) {
       throw new UnprocessableEntityException({
@@ -38,6 +54,14 @@ export class ActivitiesService {
     return this.activitiesRepository.create({
       // Do not remove comment below.
       // <creating-property-payload />
+      endTime: createActivitiesDto.endTime,
+
+      startTime: createActivitiesDto.startTime,
+
+      mainImage: createActivitiesDto.mainImage,
+
+      name: createActivitiesDto.name,
+
       themeId,
     });
   }
@@ -66,15 +90,19 @@ export class ActivitiesService {
   async update(
     id: Activities['id'],
 
-    updateactivitiesDto: UpdateActivitiesDto,
+    updateActivitiesDto: UpdateActivitiesDto,
   ) {
     // Do not remove comment below.
     // <updating-property />
+
+
+
+
     let themeId: Themes | undefined = undefined;
 
-    if (updateactivitiesDto.themeId) {
+    if (updateActivitiesDto.themeId) {
       const themeIdObject = await this.themesService.findById(
-        updateactivitiesDto.themeId.id,
+        updateActivitiesDto.themeId.id,
       );
       if (!themeIdObject) {
         throw new UnprocessableEntityException({
@@ -90,6 +118,14 @@ export class ActivitiesService {
     return this.activitiesRepository.update(id, {
       // Do not remove comment below.
       // <updating-property-payload />
+      endTime: updateActivitiesDto.endTime,
+
+      startTime: updateActivitiesDto.startTime,
+
+      mainImage: updateActivitiesDto.mainImage,
+
+      name: updateActivitiesDto.name,
+
       themeId,
     });
   }

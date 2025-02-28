@@ -1,3 +1,7 @@
+
+
+
+
 import { ThemesSchemaClass } from '../../../../../themes/infrastructure/persistence/document/entities/themes.schema';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
@@ -14,6 +18,30 @@ export type ActivitiesSchemaDocument = HydratedDocument<ActivitiesSchemaClass>;
   },
 })
 export class ActivitiesSchemaClass extends EntityDocumentHelper {
+  @Prop({
+    type:
+              Date,
+        })
+  endTime: Date ;
+
+  @Prop({
+    type:
+              Date,
+        })
+  startTime: Date ;
+
+  @Prop({
+    type:
+              String,
+        })
+  mainImage?: string ;
+
+  @Prop({
+    type:
+              String,
+        })
+  name?: string ;
+
   @Prop({
     type: ThemesSchemaClass,
   })

@@ -1,3 +1,7 @@
+
+
+
+
 import { ThemesModule } from '../themes/themes.module';
 import { Module } from '@nestjs/common';
 import { ActivitiesService } from './activities.service';
@@ -16,6 +20,10 @@ const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
 
 @Module({
   imports: [
+
+
+
+
     ThemesModule, 
     ActivitiesModule,
     TicketsModule,

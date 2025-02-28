@@ -15,6 +15,30 @@ import { EntityRelationalHelper } from '../../../../../utils/relational-entity-h
 export class ActivitiesEntity extends EntityRelationalHelper {
   @Column({
     nullable: false,
+    type: Date,
+  })
+  endTime: Date;
+
+  @Column({
+    nullable: false,
+    type: Date,
+  })
+  startTime: Date;
+
+  @Column({
+    nullable: false,
+    type: String,
+  })
+  mainImage?: string;
+
+  @Column({
+    nullable: false,
+    type: String,
+  })
+  name?: string;
+
+  @Column({
+    nullable: false,
     type: 'jsonb',
   })
   themeId: ThemesEntity;

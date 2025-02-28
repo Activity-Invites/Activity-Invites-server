@@ -1,8 +1,16 @@
+
+
+
+
 import { ThemesDto } from '../../themes/dto/themes.dto';
 
 import {
   // decorators here
   Type,
+
+
+  Transform,
+
 } from 'class-transformer';
 
 import {
@@ -10,6 +18,26 @@ import {
 
   ValidateNested,
   IsNotEmptyObject,
+
+
+  IsString,
+
+
+  IsOptional,
+
+
+
+
+
+
+
+
+
+  IsDate,
+
+
+
+
 } from 'class-validator';
 
 import {
@@ -18,6 +46,50 @@ import {
 } from '@nestjs/swagger';
 
 export class CreateActivitiesDto {
+  @ApiProperty({
+    required: true,
+    type: () =>
+      Date,
+  })
+
+  @Transform(({ value }) => new Date(value))
+  @IsDate()
+
+  endTime: Date;
+
+  @ApiProperty({
+    required: true,
+    type: () =>
+      Date,
+  })
+
+  @Transform(({ value }) => new Date(value))
+  @IsDate()
+
+  startTime: Date;
+
+  @ApiProperty({
+    required: false,
+    type: () =>
+      String,
+  })
+
+  @IsOptional()
+  @IsString()
+
+  mainImage?: string;
+
+  @ApiProperty({
+    required: false,
+    type: () =>
+      String,
+  })
+
+  @IsOptional()
+  @IsString()
+
+  name?: string;
+
   @ApiProperty({
     required: true,
     type: () => ThemesDto,
