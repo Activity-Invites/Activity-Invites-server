@@ -15,8 +15,6 @@ A fully compatible frontend boilerplate: <https://github.com/brocoders/extensive
 
 Belongs to the [bc boilerplates](https://bcboilerplates.com/) ecosystem
 
-<https://github.com/user-attachments/assets/a66f114a-c714-4036-8eeb-20cbf04ae985>
-
 ## Features
 
 - [x] Database. Support [TypeORM](https://www.npmjs.com/package/typeorm) and [Mongoose](https://www.npmjs.com/package/mongoose).
