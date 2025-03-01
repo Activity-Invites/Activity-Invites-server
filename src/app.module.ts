@@ -51,8 +51,20 @@ import { PaymentsModule } from './payments/payments.module';
 
 import { LocationsModule } from './locations/locations.module';
 
+import { TemplatesModule } from './templates/templates.module';
+
+import { TagsModule } from './tags/tags.module';
+
+import { SocialCardsModule } from './social-cards/social-cards.module';
+
+import { QRCodesModule } from './q-r-codes/q-r-codes.module';
+
 @Module({
   imports: [
+    QRCodesModule,
+    SocialCardsModule,
+    TagsModule,
+    TemplatesModule,
     LocationsModule,
     PaymentsModule,
 
