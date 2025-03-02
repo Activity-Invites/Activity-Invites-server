@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 用户模型
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String?   @unique
+  password  String?
+  provider  String    @default("email")
+  socialId  String?
+  firstName String?
+  lastName  String?
+  photoUrl  String?
+  roleId    Int?
+  statusId  Int?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("users")
+}
+
+// 角色模型
+model Role {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  @@map("roles")
+}
+
+// 状态模型
+model Status {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  @@map("statuses")
+}
+
+// 文件模型
+model File {
+  id        Int       @id @default(autoincrement())
+  path      String
+  filename  String
+  mimetype  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("files")
+}
