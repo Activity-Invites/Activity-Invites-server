@@ -1,4 +1,3 @@
-
 // ======== header.prisma ========
 generator client {
   provider = "prisma-client-js"
@@ -12,25 +11,25 @@ datasource db {
 
 // ======== activities.prisma ========
 model activities {
-  id        String   @id(map: "PK_7f4004429f731ffb9c88eb486a8") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id        String   @id(map: "PK_7f4004429f731ffb9c88eb486a8") @default(uuid()) @db.Uuid
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @default(now()) @db.Timestamp(6)
 }
 
 model tickets {
-  id        String   @id(map: "PK_343bc942ae261cf7a1377f48fd0") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id        String   @id(map: "PK_343bc942ae261cf7a1377f48fd0") @default(uuid()) @db.Uuid
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @default(now()) @db.Timestamp(6)
 }
 
 model themes {
-  id        String   @id(map: "PK_ddbeaab913c18682e5c88155592") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id        String   @id(map: "PK_ddbeaab913c18682e5c88155592") @default(uuid()) @db.Uuid
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @default(now()) @db.Timestamp(6)
 }
 
 model comments {
-  id        String   @id(map: "PK_8bf68bc960f2b69e818bdb90dcb") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id        String   @id(map: "PK_8bf68bc960f2b69e818bdb90dcb") @default(uuid()) @db.Uuid
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @default(now()) @db.Timestamp(6)
 }
@@ -64,7 +63,7 @@ model session {
 
 // ======== files.prisma ========
 model file {
-  id   String @id(map: "PK_36b46d232307066b3a2c9ea3a1d") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id   String @id(map: "PK_36b46d232307066b3a2c9ea3a1d") @default(uuid()) @db.Uuid
   path String @db.VarChar
   user user?
 }
@@ -100,4 +99,3 @@ model user {
   @@index([socialId], map: "IDX_9bd2fe7a8e694dedc4ec2f666f")
   @@index([lastName], map: "IDX_f0e1b4ecdca13b177e2e3a0613")
 }
-

@@ -44,7 +44,11 @@
     "prisma:db:pull": "prisma db pull",
     "prisma:db:push": "prisma db push",
     "prisma:generate": "prisma generate",
-    "prisma:build:generate": "npm run prisma:build-schema && prisma generate"
+    "prisma:build:generate": "npm run prisma:build-schema && prisma generate",
+    "prisma:migrate": "npx prisma migrate dev --name init",
+    "prisma:migrate:deploy": "npx prisma migrate deploy",
+    "prisma:migrate:reset": "npx prisma migrate reset",
+    "prisma:studio": "npx prisma studio"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.744.0",
