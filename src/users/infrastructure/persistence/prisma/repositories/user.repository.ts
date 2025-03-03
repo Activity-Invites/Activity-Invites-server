@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../../prisma/prisma.service';
-import { User } from '../../../domain/user';
-import { UserRepository } from '../user.repository';
-import { IPaginationOptions } from '../../../../utils/types/pagination-options';
-import { FilterUserDto, SortUserDto } from '../../../dto/query-user.dto';
-import { NullableType } from '../../../../utils/types/nullable.type';
-import { DeepPartial } from '../../../../utils/types/deep-partial.type';
+import { PrismaService } from '../../../../../prisma/prisma.service';
+import { User } from '../../../../domain/user';
+import { UserRepository } from '../../user.repository';
+import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
+import { FilterUserDto, SortUserDto } from '../../../../dto/query-user.dto';
+import { NullableType } from '../../../../../utils/types/nullable.type';
+import { DeepPartial } from '../../../../../utils/types/deep-partial.type';
 
 @Injectable()
 export class UserPrismaRepository implements UserRepository {

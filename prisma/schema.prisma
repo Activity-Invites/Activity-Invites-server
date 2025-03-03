@@ -1,9 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
+// ======== header.prisma ========
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,50 +9,95 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// 用户模型
-model User {
-  id        Int       @id @default(autoincrement())
-  email     String?   @unique
-  password  String?
-  provider  String    @default("email")
-  socialId  String?
-  firstName String?
-  lastName  String?
-  photoUrl  String?
+
+// ======== activities.prisma ========
+model activities {
+  id        String   @id(map: "PK_7f4004429f731ffb9c88eb486a8") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+}
+
+model tickets {
+  id        String   @id(map: "PK_343bc942ae261cf7a1377f48fd0") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+}
+
+model themes {
+  id        String   @id(map: "PK_ddbeaab913c18682e5c88155592") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+}
+
+model comments {
+  id        String   @id(map: "PK_8bf68bc960f2b69e818bdb90dcb") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+}
+
+
+// ======== auth.prisma ========
+model role {
+  id   Int    @id(map: "PK_b36bcfe02fc8de3c57a8b2391c2")
+  name String @db.VarChar
+  user user[]
+}
+
+model status {
+  id   Int    @id(map: "PK_e12743a7086ec826733f54e1d95")
+  name String @db.VarChar
+  user user[]
+}
+
+model session {
+  id        Int       @id(map: "PK_f55da76ac1c3ac420f444d2ff11") @default(autoincrement())
+  hash      String    @db.VarChar
+  createdAt DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt DateTime  @default(now()) @db.Timestamp(6)
+  deletedAt DateTime? @db.Timestamp(6)
+  userId    Int?
+  user      user?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_3d2f174ef04fb312fdebd0ddc53")
+
+  @@index([userId], map: "IDX_3d2f174ef04fb312fdebd0ddc5")
+}
+
+
+// ======== files.prisma ========
+model file {
+  id   String @id(map: "PK_36b46d232307066b3a2c9ea3a1d") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  path String @db.VarChar
+  user user?
+}
+
+model migrations {
+  id        Int    @id(map: "PK_8c82d7f526340ab734260ea46be") @default(autoincrement())
+  timestamp BigInt
+  name      String @db.VarChar
+}
+
+
+// ======== user.prisma ========
+model user {
+  id        Int       @id(map: "PK_cace4a159ff9f2512dd42373760") @default(autoincrement())
+  email     String?   @unique(map: "UQ_e12875dfb3b1d92d7d7c5377e22") @db.VarChar
+  password  String?   @db.VarChar
+  provider  String    @default("email") @db.VarChar
+  socialId  String?   @db.VarChar
+  firstName String?   @db.VarChar
+  lastName  String?   @db.VarChar
+  createdAt DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt DateTime  @default(now()) @db.Timestamp(6)
+  deletedAt DateTime? @db.Timestamp(6)
+  photoId   String?   @unique(map: "REL_75e2be4ce11d447ef43be0e374") @db.Uuid
   roleId    Int?
   statusId  Int?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  session   session[]
+  file      file?     @relation(fields: [photoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_75e2be4ce11d447ef43be0e374f")
+  role      role?     @relation(fields: [roleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c28e52f758e7bbc53828db92194")
+  status    status?   @relation(fields: [statusId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_dc18daa696860586ba4667a9d31")
 
-  @@map("users")
+  @@index([firstName], map: "IDX_58e4dbff0e1a32a9bdc861bb29")
+  @@index([socialId], map: "IDX_9bd2fe7a8e694dedc4ec2f666f")
+  @@index([lastName], map: "IDX_f0e1b4ecdca13b177e2e3a0613")
 }
 
-// 角色模型
-model Role {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-
-  @@map("roles")
-}
-
-// 状态模型
-model Status {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-
-  @@map("statuses")
-}
-
-// 文件模型
-model File {
-  id        Int       @id @default(autoincrement())
-  path      String
-  filename  String
-  mimetype  String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-
-  @@map("files")
-}

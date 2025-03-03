@@ -39,7 +39,12 @@
     "test:e2e:document:docker": "docker compose -f docker-compose.document.test.yaml --env-file env-example-document -p tests up -d --build && docker compose -f docker-compose.document.test.yaml -p tests exec api /opt/wait-for-it.sh -t 0 localhost:3000 -- npm run test:e2e -- --watchAll --runInBand && docker compose -f docker-compose.document.test.yaml -p tests down && docker compose -p tests rm -svf",
     "test:e2e:relational:docker": "docker compose -f docker-compose.relational.test.yaml --env-file env-example-relational -p tests up -d --build && docker compose -f docker-compose.relational.test.yaml -p tests exec api /opt/wait-for-it.sh -t 0 localhost:3000 -- npm run test:e2e -- --watchAll --runInBand && docker compose -f docker-compose.relational.test.yaml -p tests down && docker compose -p tests rm -svf",
     "prepare": "husky",
-    "release": "release-it"
+    "release": "release-it",
+    "prisma:build-schema": "node prisma/build-schema.js",
+    "prisma:db:pull": "prisma db pull",
+    "prisma:db:push": "prisma db push",
+    "prisma:generate": "prisma generate",
+    "prisma:build:generate": "npm run prisma:build-schema && prisma generate"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.744.0",
