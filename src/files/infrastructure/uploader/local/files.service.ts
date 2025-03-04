@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { FileRepository } from '../../persistence/file.repository';
+import { FileRepository } from '../../../repositories/file.repository';
 import { AllConfigType } from '../../../../config/config.type';
 import { FileType } from '../../../domain/file';
 

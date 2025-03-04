@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreatethemesDto } from './dto/create-themes.dto';
 import { UpdatethemesDto } from './dto/update-themes.dto';
-import { ThemesRepository } from './infrastructure/persistence/themes.repository';
+import { ThemesRepository } from './repositories/themes.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { Themes } from './domain/themes';
 

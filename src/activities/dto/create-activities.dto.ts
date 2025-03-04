@@ -88,7 +88,7 @@ export class CreateActivitiesDto {
   @IsOptional()
   @IsString()
 
-  name?: string;
+  name: string;
 
   @ApiProperty({
     required: true,

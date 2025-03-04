@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 import { ThemesService } from '../themes/themes.service';
 import { Themes } from '../themes/domain/themes';
 
@@ -14,17 +6,13 @@ import { HttpStatus, UnprocessableEntityException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { CreateActivitiesDto } from './dto/create-activities.dto';
 import { UpdateActivitiesDto } from './dto/update-activities.dto';
-import { ActivitiesRepository } from './infrastructure/persistence/activities.repository';
+import { ActivitiesRepository } from './repositories/activities.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { Activities } from './domain/activities';
 
 @Injectable()
 export class ActivitiesService {
   constructor(
-
-
-
-
     private readonly themesService: ThemesService,
 
     // Dependencies here
@@ -34,8 +22,6 @@ export class ActivitiesService {
   async create(createActivitiesDto: CreateActivitiesDto) {
     // Do not remove comment below.
     // <creating-property />
-
-
 
 
     const themeIdObject = await this.themesService.findById(
@@ -94,8 +80,6 @@ export class ActivitiesService {
   ) {
     // Do not remove comment below.
     // <updating-property />
-
-
 
 
     let themeId: Themes | undefined = undefined;

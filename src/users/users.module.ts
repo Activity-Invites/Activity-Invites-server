@@ -1,29 +1,15 @@
 import { Module } from '@nestjs/common';
 
 import { UsersController } from './users.controller';
-
 import { UsersService } from './users.service';
-import { DocumentUserPersistenceModule } from './infrastructure/persistence/document/document-persistence.module';
-import { RelationalUserPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
-import { DatabaseConfig } from '../database/config/database-config.type';
-import databaseConfig from '../database/config/database.config';
+import { UserRepository } from './repositories/user.repository';
+import { PrismaModule } from '../prisma/prisma.module';
 import { FilesModule } from '../files/files.module';
 
-// <database-block>
-const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
-  .isDocumentDatabase
-  ? DocumentUserPersistenceModule
-  : RelationalUserPersistenceModule;
-// </database-block>
-
 @Module({
-  imports: [
-    // import modules, etc.
-    infrastructurePersistenceModule,
-    FilesModule,
-  ],
+  imports: [PrismaModule, FilesModule],
   controllers: [UsersController],
-  providers: [UsersService],
-  exports: [UsersService, infrastructurePersistenceModule],
+  providers: [UsersService, UserRepository],
+  exports: [UsersService, UserRepository],
 })
 export class UsersModule {}

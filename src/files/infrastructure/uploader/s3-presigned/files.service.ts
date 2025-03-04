@@ -4,7 +4,7 @@ import {
   PayloadTooLargeException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { FileRepository } from '../../persistence/file.repository';
+import { FileRepository } from '../../../repositories/file.repository';
 
 import { FileUploadDto } from './dto/file.dto';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';

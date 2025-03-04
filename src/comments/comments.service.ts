@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommentsDto } from './dto/create-comments.dto';
 import { UpdateCommentsDto } from './dto/update-comments.dto';
-import { CommentsRepository } from './infrastructure/persistence/comments.repository';
+import { CommentsRepository } from './repositories/comments.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { Comments } from './domain/comments';
 

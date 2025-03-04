@@ -36,7 +36,7 @@ export class Activities {
     nullable: false,
   })
 
-  name?: string;
+  name: string;
 
   @ApiProperty({
     type: () => Themes,

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTicketsDto } from './dto/create-tickets.dto';
 import { UpdateTicketsDto } from './dto/update-tickets.dto';
-import { TicketsRepository } from './infrastructure/persistence/tickets.repository';
+import { TicketsRepository } from './repositories/tickets.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { Tickets } from './domain/tickets';
 

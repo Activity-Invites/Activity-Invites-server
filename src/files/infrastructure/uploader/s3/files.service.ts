@@ -3,7 +3,7 @@ import {
   Injectable,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { FileRepository } from '../../persistence/file.repository';
+import { FileRepository } from '../../../repositories/file.repository';
 import { FileType } from '../../../domain/file';
 
 @Injectable()
