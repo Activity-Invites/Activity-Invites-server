@@ -22,8 +22,6 @@ export class UserPrismaRepository implements UserRepository {
         socialId: data.socialId,
         firstName: data.firstName,
         lastName: data.lastName,
-        // 如果有 photo，将其 path 映射到 photoUrl
-        photoUrl: data.photo?.path,
       },
     });
 
