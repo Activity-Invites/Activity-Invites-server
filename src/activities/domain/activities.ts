@@ -1,46 +1,35 @@
-
-
-
-
 import { Themes } from '../../themes/domain/themes';
 import { ApiProperty } from '@nestjs/swagger';
+import { BaseEntity } from '../../utils/repository/entity-metadata';
 
-export class Activities {
+export class Activities extends BaseEntity {
   @ApiProperty({
-    type: () =>
-      Date,
-    nullable: false,
+    type: () => Date,
+    nullable: true,
   })
-
   endTime: Date;
 
   @ApiProperty({
-    type: () =>
-      Date,
-    nullable: false,
+    type: () => Date,
+    nullable: true,
   })
-
   startTime: Date;
 
   @ApiProperty({
-    type: () =>
-      String,
-    nullable: false,
+    type: () => String,
+    nullable: true,
   })
-
   mainImage?: string;
 
   @ApiProperty({
-    type: () =>
-      String,
+    type: () => String,
     nullable: false,
   })
-
   name: string;
 
   @ApiProperty({
     type: () => Themes,
-    nullable: false,
+    nullable: true,
   })
   themeId: Themes;
 

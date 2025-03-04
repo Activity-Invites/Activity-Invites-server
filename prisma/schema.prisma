@@ -11,29 +11,41 @@ datasource db {
 
 // ======== activities.prisma ========
 model activities {
-  id        String   @id(map: "PK_7f4004429f731ffb9c88eb486a8") @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @default(now()) @db.Timestamp(6)
-  name      String @db.VarChar
-  themeId   String? 
+  id          String     @id(map: "PK_7f4004429f731ffb9c88eb486a8") @default(uuid()) @db.Uuid
+  createdAt   DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime   @default(now()) @db.Timestamp(6)
+  name        String     @db.VarChar
+  mainImage   String?    @db.VarChar
+  startTime   DateTime?  @db.Timestamp(6)
+  endTime     DateTime?  @db.Timestamp(6)
+  themeId     String?    @db.Uuid
+  theme       themes?    @relation(fields: [themeId], references: [id])
+  tickets     tickets[]
+  comments    comments[]
 }
 
 model tickets {
-  id        String   @id(map: "PK_343bc942ae261cf7a1377f48fd0") @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  id           String      @id(map: "PK_343bc942ae261cf7a1377f48fd0") @default(uuid()) @db.Uuid
+  createdAt    DateTime    @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime    @default(now()) @db.Timestamp(6)
+  activityId   String?     @db.Uuid
+  activity     activities? @relation(fields: [activityId], references: [id])
 }
 
 model themes {
-  id        String   @id(map: "PK_ddbeaab913c18682e5c88155592") @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  id         String       @id(map: "PK_ddbeaab913c18682e5c88155592") @default(uuid()) @db.Uuid
+  createdAt  DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt  DateTime     @default(now()) @db.Timestamp(6)
+  activities activities[]
 }
 
 model comments {
-  id        String   @id(map: "PK_8bf68bc960f2b69e818bdb90dcb") @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  id           String      @id(map: "PK_8bf68bc960f2b69e818bdb90dcb") @default(uuid()) @db.Uuid
+  createdAt    DateTime    @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime    @default(now()) @db.Timestamp(6)
+  content      String?     @db.VarChar
+  activityId   String?     @db.Uuid
+  activity     activities? @relation(fields: [activityId], references: [id])
 }
 
 

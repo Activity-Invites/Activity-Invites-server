@@ -1,124 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { NullableType } from '../../utils/types/nullable.type';
 import { Activities } from '../domain/activities';
-import { IPaginationOptions } from '../../utils/types/pagination-options';
-import { DeepPartial } from '../../utils/types/deep-partial.type';
 import { Themes } from '../../themes/domain/themes';
+import { BaseRepository } from '../../utils/repository/base.repository';
+import { DeepPartial } from '../../utils/types/deep-partial.type';
 
 @Injectable()
-export class ActivitiesRepository {
-  constructor(private prisma: PrismaService) {}
-
-  async create(
-    data: Omit<Activities, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<Activities> {
-    const createdActivity = await this.prisma.activities.create({
-      data: {
-        name: data.name,
-        // 如果有themeId的关联关系，需要处理主题ID
-        ...(data.themeId && { themeId: data.themeId.id }),
-      },
-    });
-
-    return this.mapToDomainModel(createdActivity);
+export class ActivitiesRepository extends BaseRepository<any, Activities> {
+  constructor(protected readonly prisma: PrismaService) {
+    super(prisma, 'activities');
   }
 
-  async findAllWithPagination({
-    paginationOptions,
-  }: {
-    paginationOptions: IPaginationOptions;
-  }): Promise<Activities[]> {
-    const { page, limit } = paginationOptions;
-    const skip = (page - 1) * limit;
-
-    const activities = await this.prisma.activities.findMany({
-      skip,
-      take: limit,
-      // include: {
-      //   theme: true, // 如果有主题关联，需要包含
-      // },
-    });
-
-    return activities.map((activity) => this.mapToDomainModel(activity));
-  }
-
-  async findById(id: Activities['id']): Promise<NullableType<Activities>> {
-    if (!id) return null;
-
-    const activity = await this.prisma.activities.findUnique({
-      where: { id: id as string },
-      // include: {
-      //   theme: true, // 如果有主题关联，需要包含
-      // },
-    });
-
-    if (!activity) return null;
-
-    return this.mapToDomainModel(activity);
-  }
-
-  async findByIds(ids: Activities['id'][]): Promise<Activities[]> {
-    if (!ids.length) return [];
-
-    const activities = await this.prisma.activities.findMany({
-      where: {
-        id: {
-          in: ids as string[],
-        },
-      },
-      // include: {
-      //   theme: true, // 如果有主题关联，需要包含
-      // },
-    });
-
-    return activities.map((activity) => this.mapToDomainModel(activity));
-  }
-
-  async update(
-    id: Activities['id'],
-    payload: DeepPartial<Activities>,
-  ): Promise<Activities | null> {
-    if (!id) return null;
-
-    // 从 payload 中提取需要更新的字段
-    const updateData: any = {};
-    if (payload.name !== undefined) updateData.name = payload.name;
-    if (payload.mainImage !== undefined) updateData.mainImage = payload.mainImage;
-    if (payload.startTime !== undefined) updateData.startTime = payload.startTime;
-    if (payload.endTime !== undefined) updateData.endTime = payload.endTime;
-    if (payload.themeId !== undefined) {
-      updateData.themeId = payload.themeId.id;
-    }
-
-    try {
-      const updatedActivity = await this.prisma.activities.update({
-        where: { id: id as string },
-        data: updateData,
-        // include: {
-        //   theme: true, // 如果有主题关联，需要包含
-        // },
-      });
-
-      return this.mapToDomainModel(updatedActivity);
-    } catch (error) {
-      if (error.code === 'P2025') {
-        return null;
-      }
-      throw error;
-    }
-  }
-
-  async remove(id: Activities['id']): Promise<void> {
-    if (!id) return;
-
-    await this.prisma.activities.delete({
-      where: { id: id as string },
-    });
-  }
-
-  // 将 Prisma 模型映射为领域模型
-  private mapToDomainModel(prismaActivity: any): Activities {
+  /**
+   * 将Prisma模型映射为领域模型
+   * @param prismaActivity - Prisma活动模型
+   * @returns 活动领域模型
+   */
+  mapToDomainModel(prismaActivity: any): Activities {
     const activity = new Activities();
     activity.id = prismaActivity.id;
     activity.name = prismaActivity.name;
@@ -130,7 +28,8 @@ export class ActivitiesRepository {
     if (prismaActivity.theme) {
       const theme = new Themes();
       theme.id = prismaActivity.theme.id;
-      // 设置其他主题属性，根据需要添加
+      theme.createdAt = prismaActivity.theme.createdAt;
+      theme.updatedAt = prismaActivity.theme.updatedAt;
       activity.themeId = theme;
     }
     
@@ -139,5 +38,26 @@ export class ActivitiesRepository {
     activity.updatedAt = prismaActivity.updatedAt;
     
     return activity;
+  }
+
+  /**
+   * 将领域模型映射为Prisma模型
+   * @param domainModel - 活动领域模型
+   * @returns Prisma创建/更新数据
+   */
+  mapToPrismaModel(domainModel: Partial<Activities> | DeepPartial<Activities> | Omit<Activities, 'id' | 'createdAt' | 'updatedAt'>): any {
+    const prismaModel: any = {};
+    
+    if (domainModel.name !== undefined) prismaModel.name = domainModel.name;
+    if (domainModel.mainImage !== undefined) prismaModel.mainImage = domainModel.mainImage;
+    if (domainModel.startTime !== undefined) prismaModel.startTime = domainModel.startTime;
+    if (domainModel.endTime !== undefined) prismaModel.endTime = domainModel.endTime;
+    
+    // 处理关联
+    if (domainModel.themeId !== undefined) {
+      prismaModel.themeId = domainModel.themeId.id;
+    }
+    
+    return prismaModel;
   }
 }
